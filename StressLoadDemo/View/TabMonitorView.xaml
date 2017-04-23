@@ -1,0 +1,90 @@
+﻿<UserControl  x:Class="StressLoadDemo.View.TabMonitorView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+              mc:Ignorable="d"
+              d:DesignHeight="540" 
+              d:DesignWidth="830"
+              DataContext="{Binding Source={StaticResource Locator},Path=MonitorTab}"
+              >
+    <Grid >
+        <ItemsControl ItemsSource="{Binding MessageLines}" Height="194" Width="373" Canvas.Left="397" Canvas.Top="-14" Panel.ZIndex="3" Margin="23,113,434,233">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas  Width="373" Height="194"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}" Stroke="Orange" StrokeThickness="2"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding DeviceLines}" Height="194" Width="373" Canvas.Left="397" Canvas.Top="-14" Panel.ZIndex="3" Margin="433,112,24,234">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas  Width="373" Height="194"  />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}" Stroke="Orange" StrokeThickness="2"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <Image Source="/Resource/chart_background.png" Width="400" Margin="10,45,420,187"/>
+        <Label Width ="400" Visibility="{Binding ShadeVisibility}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="9" Opacity="0.8" Height="270" Background ="Black" Foreground="White" Margin="10,66,420,204"/>
+        <Label Width ="400" Visibility="{Binding ShadeVisibility}" HorizontalContentAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="9" Opacity="0.8" Height="270" Background ="Black" Foreground="White" Margin="420,66,10,204"/>
+        <Label Canvas.ZIndex="9" Margin="150,165,605,335" Visibility="{Binding ShadeVisibility}" Foreground="White" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold">Paused</Label>
+        <Label x:Name="label" Content="Consumer Group Name" HorizontalAlignment="Left" Margin="10,14,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="textBox" MaxLines="1" HorizontalAlignment="Left" Height="22" Margin="165,16,0,0" TextWrapping="Wrap" Text="{Binding ConsumerGroupName}" VerticalAlignment="Top" Width="165"/>
+        <Label x:Name="label_Copy" Content="Partition Id" HorizontalAlignment="Left" Margin="364,14,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="473,16,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding Partitions}" SelectedIndex="{Binding SelectedPartition}">
+        </ComboBox>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement5}" Margin="27,112,757,403"/>
+        <Label Canvas.ZIndex="9" Content="{Binding DeviceMeasurement2}" Margin="433,230,351,285"/>
+        <Label Canvas.ZIndex="9" Content="{Binding DeviceMeasurement3}" Margin="433,191,351,324"/>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement0}" Margin="27,306,757,209"/>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement1}" Margin="27,270,757,245"/>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement2}" Margin="27,230,757,285"/>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement3}" Margin="27,191,757,324"/>
+        <Label Canvas.ZIndex="9" Content="{Binding MessageMeasurement4}" Margin="27,152,757,363"/>
+        <Label Canvas.ZIndex="9" Content="{Binding DeviceMeasurement4}" Margin="433,152,351,363"/>
+        <Label Canvas.ZIndex="9" Content="{Binding DeviceMeasurement5}" Margin="433,112,351,403"/>
+        <Label x:Name="label1" Content="IoT Hub Message(one partition)" HorizontalAlignment="Left" Margin="72,75,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        <Label x:Name="label1_Copy" Content="IoT Hub Device Number (one partition)" Canvas.ZIndex="4" HorizontalAlignment="Left" Margin="465,75,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
+        <Label x:Name="label1_Copy1" Content="Real Time Data:" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+        <Label x:Name="label2" Content="{Binding MessageRealTimeNumber}" HorizontalAlignment="Left" Margin="160,342,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label x:Name="label3" Content="Total Task:" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy" Content="Completed" HorizontalAlignment="Left" Margin="494,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy1" Content="{Binding TaskActiveCount}" HorizontalAlignment="Left" Margin="174,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy3" Content="{Binding TaskCompleteCount}" HorizontalAlignment="Left" Margin="473,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy4" Content="Active," HorizontalAlignment="Left" Margin="201,385,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.556,0.538"/>
+        <Label x:Name="label3_Copy5" Content="{Binding TaskTotalCount}" HorizontalAlignment="Left" Margin="78,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy2" Content="Running," HorizontalAlignment="Left" Margin="349,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy6" Content="{Binding TaskRunningCount}" HorizontalAlignment="Left" Margin="330,385,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="button" Command ="{Binding Reload}" IsEnabled="{Binding RefreshBtnEnabled}" Content="Reload" HorizontalAlignment="Left" Margin="680,17,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Panel.ZIndex="9" Foreground="White" Visibility="{Binding ShadeVisibility}" Margin="573,165,182,335" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" Content="Paused"/>
+        <Image Source="/StressLoadDemo;component/Resource/chart_background.PNG" Width="400" Margin="420,45,10,187"/>
+        <Label x:Name="label1_Copy2" Content="Real Time Data:" HorizontalAlignment="Left" Margin="430,342,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+        <Label x:Name="label2_Copy" Content="{Binding DeviceRealTimeNumber}" HorizontalAlignment="Left" Margin="612,343,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <Label Panel.ZIndex="9" Content="{Binding DeviceMeasurement1}" Margin="433,270,351,245"/>
+        <Label Panel.ZIndex="9" Content="{Binding DeviceMeasurement0}" Margin="433,306,351,209"/>
+        <GroupBox Header="Details" HorizontalAlignment="Left" Height="114" Margin="10,416,0,0" VerticalAlignment="Top" Width="810">
+            <Grid>
+                <Label Content="Test has been running for" HorizontalAlignment="Left" Margin="11,18,0,0" VerticalAlignment="Top"/>
+                <Label Content="Overall Throughput is " HorizontalAlignment="Left" Margin="409,18,0,0" VerticalAlignment="Top"/>
+                <Label Content="Average Device-To-Hub Delay" HorizontalAlignment="Left" Margin="11,52,0,0" VerticalAlignment="Top"/>
+                <Label Content="Average End To End Delay" HorizontalAlignment="Left" Margin="409,52,0,0" VerticalAlignment="Top"/>
+                <Label Content="{Binding TestRunTime}" HorizontalAlignment="Left" Margin="199,18,0,0" VerticalAlignment="Top" Width="144" Height="26"/>
+                <Label Content="{Binding Throughput}" HorizontalAlignment="Left" Margin="600,18,0,0" VerticalAlignment="Top" Width="153"/>
+                <Label Content="{Binding DeviceToHubDelay}" HorizontalAlignment="Left" Margin="199,52,0,0" VerticalAlignment="Top" Width="144"/>
+                <Label Content="{Binding EndToEndDelay}" HorizontalAlignment="Left" Margin="600,52,0,0" VerticalAlignment="Top" Width="153"/>
+
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>
