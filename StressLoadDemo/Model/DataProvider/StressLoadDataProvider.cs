@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace StressLoadDemo.Model.DataProvider
 {
-    public class StressLoadDataProvider:IStressDataProvider
+    public class StressLoadDataProvider : IStressDataProvider
     {
         public string HubOwnerConectionString { get; set; }
         public string EventHubEndpoint { get; set; }
@@ -30,17 +30,16 @@ namespace StressLoadDemo.Model.DataProvider
         public int MessagePerMinute { get; set; }
         public string BatchJobId { get; set; }
         public string VmSize { get; set; }
-        double totalMessage;
-        double totalDevice;
+
         public StressLoadDataProvider()
         {
             //register messenger to know where we are during deployment
-           
+
 
         }
 
-       
-        public void Run(IConfigurationProvider provider =null)
+
+        public void Run(IConfigurationProvider provider = null)
         {
             provider = provider ?? new InternalProvider();
             provider.PutConfigValue("NumofVm", NumOfVm);
@@ -56,7 +55,7 @@ namespace StressLoadDemo.Model.DataProvider
             provider.PutConfigValue("DeviceClientEndpoint", HubOwnerConectionString);
             provider.PutConfigValue("EventHubEndpoint", EventHubEndpoint);
             provider.PutConfigValue("Transport", "Mqtt");
-            DeployAndStartStressLoad(provider);
+            DeployAndStartStressLoad(provider).Wait();
         }
 
         async Task DeployAndStartStressLoad(IConfigurationProvider provider)
@@ -72,7 +71,7 @@ namespace StressLoadDemo.Model.DataProvider
                 Transport = provider.GetConfigValue("Transport"),
                 MessagePerMin = int.Parse(provider.GetConfigValue("MessagePerMin")),
                 NumofVm = numofVM,
-                SizeOfVM = (VmSize) Enum.Parse(typeof(VmSize), provider.GetConfigValue("SizeOfVM")),
+                SizeOfVM = (VmSize)Enum.Parse(typeof(VmSize), provider.GetConfigValue("SizeOfVM")),
                 DeviceClientEndpoint = provider.GetConfigValue("DeviceClientEndpoint"),
                 DurationInMin = int.Parse(provider.GetConfigValue("DurationInMin"))
             };

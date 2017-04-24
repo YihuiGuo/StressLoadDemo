@@ -2,7 +2,6 @@
 using Microsoft.Azure.Devices;
 using Microsoft.ServiceBus.Messaging;
 using StressLoadDemo.Model.DataProvider.ReceiverTool;
-using StressLoadDemo.Model.DataProvider.ReceiverTool;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,7 +18,6 @@ namespace StressLoadDemo.Model.DataProvider
         private Thread workThread;
         delegate void DoWork();
 
-        private DoWork currentAction;
         public double totalDevice, totalMessage;
         public int partitionNumber;
         public DateTime currentDate;

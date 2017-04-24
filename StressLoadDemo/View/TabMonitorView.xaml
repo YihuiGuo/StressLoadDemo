@@ -58,13 +58,13 @@
         <Label x:Name="label1_Copy1" Content="Real Time Data:" HorizontalAlignment="Left" Margin="10,341,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
         <Label x:Name="label2" Content="{Binding MessageRealTimeNumber}" HorizontalAlignment="Left" Margin="160,342,0,0" VerticalAlignment="Top" FontSize="16"/>
         <Label x:Name="label3" Content="Total Task:" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy" Content="Completed" HorizontalAlignment="Left" Margin="494,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy1" Content="{Binding TaskActiveCount}" HorizontalAlignment="Left" Margin="174,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy3" Content="{Binding TaskCompleteCount}" HorizontalAlignment="Left" Margin="473,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy4" Content="Active," HorizontalAlignment="Left" Margin="201,385,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.556,0.538"/>
+        <Label x:Name="label3_Copy" Content="Completed" HorizontalAlignment="Left" Margin="542,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy1" Content="{Binding TaskActiveCount}" HorizontalAlignment="Left" Margin="184,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy3" Content="{Binding TaskCompleteCount}" HorizontalAlignment="Left" Margin="521,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy4" Content="Active," HorizontalAlignment="Left" Margin="211,385,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.556,0.538"/>
         <Label x:Name="label3_Copy5" Content="{Binding TaskTotalCount}" HorizontalAlignment="Left" Margin="78,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy2" Content="Running," HorizontalAlignment="Left" Margin="349,385,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label3_Copy6" Content="{Binding TaskRunningCount}" HorizontalAlignment="Left" Margin="330,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy2" Content="Running," HorizontalAlignment="Left" Margin="377,385,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label3_Copy6" Content="{Binding TaskRunningCount}" HorizontalAlignment="Left" Margin="358,385,0,0" VerticalAlignment="Top"/>
         <Button x:Name="button" Command ="{Binding Reload}" IsEnabled="{Binding RefreshBtnEnabled}" Content="Reload" HorizontalAlignment="Left" Margin="680,17,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Panel.ZIndex="9" Foreground="White" Visibility="{Binding ShadeVisibility}" Margin="573,165,182,335" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" Content="Paused"/>
         <Image Source="/StressLoadDemo;component/Resource/chart_background.PNG" Width="400" Margin="420,45,10,187"/>
@@ -85,6 +85,7 @@
 
             </Grid>
         </GroupBox>
+        <Button x:Name="button1" Content="View In Portal" HorizontalAlignment="Left" Margin="659,388,0,0" VerticalAlignment="Top" Width="133" Height="22"/>
 
     </Grid>
 </UserControl>

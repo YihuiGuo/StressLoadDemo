@@ -20,23 +20,23 @@ using GalaSoft.MvvmLight.Command;
 
 namespace StressLoadDemo.ViewModel
 {
-    public class TabMonitorViewModel:ViewModelBase
+    public class TabMonitorViewModel : ViewModelBase
     {
         private const double CanvasWidth = 373;
         private const double CanvasHeight = 194;
-        private readonly Timer _refreshDataTimer,_refreshTaskTimer;
+        private readonly Timer _refreshDataTimer, _refreshTaskTimer;
         private double _deviceRealTimeNumber, _messageRealTimeNumber;
         private ObservableCollection<MyLine> _deviceLines, _messageLines;
         private List<MyLine> _deviceLineBuffer, _messageLineBuffer;
         private List<double> _deviceNumberBuffer, _messageNumberBuffer;
         private IStressDataProvider _dataProvider;
-        private string _selectedPartition ;
+        private string _selectedPartition;
         private HubReceiver _hubDataReceiver;
         private DateTime _firstDataArriveTime;
         private string _consumerGroupName;
         private bool _refreshBtnEnabled;
         private Visibility _shadeVisibility;
-        private int _taskActiveCount, _taskRunningCount, _taskCompletedCount,_taskTotalCount;
+        private int _taskActiveCount, _taskRunningCount, _taskCompletedCount, _taskTotalCount;
         private ObservableCollection<string> _partitions { get; set; }
         string _testRunTime, _throughput, _d2hDelay, _e2eDelay;
         public TabMonitorViewModel(IStressDataProvider provider)
@@ -68,6 +68,8 @@ namespace StressLoadDemo.ViewModel
 
 
         #region UIBindingProperties
+
+        public RelayCommand OpenBrowser { get; set; }
         public RelayCommand Reload { get; set; }
 
         public string TestRunTime
@@ -195,7 +197,7 @@ namespace StressLoadDemo.ViewModel
 
         public Visibility ShadeVisibility
         {
-            get { return _shadeVisibility;}
+            get { return _shadeVisibility; }
             set
             {
                 _shadeVisibility = value;
@@ -214,7 +216,7 @@ namespace StressLoadDemo.ViewModel
                     _partitions = value;
                     RaisePropertyChanged();
                 }
-               
+
             }
         }
 
@@ -244,7 +246,7 @@ namespace StressLoadDemo.ViewModel
                     _hubDataReceiver.SetPartitionId(int.Parse(value));
                 }
                 _selectedPartition = value;
-                
+
                 RaisePropertyChanged();
             }
         }
@@ -259,6 +261,10 @@ namespace StressLoadDemo.ViewModel
             }
         }
         #endregion
+        void GoToPortal()
+        {
+            System.Diagnostics.Process.Start("http://www.webpage.com");
+        }
 
         void StopCollecting()
         {
@@ -282,9 +288,9 @@ namespace StressLoadDemo.ViewModel
             _deviceNumberBuffer = new List<double>();
             DeviceLines = new ObservableCollection<MyLine>();
             MessageLines = new ObservableCollection<MyLine>();
-            DeviceRealTimeNumber = 0;MessageRealTimeNumber = 0;
-            TestRunTime = "N/A";Throughput = "N/A";
-            EndToEndDelay = "";DeviceToHubDelay = "";
+            DeviceRealTimeNumber = 0; MessageRealTimeNumber = 0;
+            TestRunTime = "N/A"; Throughput = "N/A";
+            EndToEndDelay = ""; DeviceToHubDelay = "";
         }
 
         public void ProcessMonitorConfig(IStressDataProvider provider)
@@ -294,7 +300,7 @@ namespace StressLoadDemo.ViewModel
             StartCollecting();
         }
 
-        void ObserveTask(object sender,ElapsedEventArgs e)
+        void ObserveTask(object sender, ElapsedEventArgs e)
         {
             //get task running status
             var builder = new UriBuilder(_dataProvider.BatchUrl);
@@ -336,11 +342,11 @@ namespace StressLoadDemo.ViewModel
             _deviceNumberBuffer.Add(_deviceRealTimeNumber);
 
             TestRunTime = _hubDataReceiver.runningTime.ToString();
-            Throughput = _hubDataReceiver.throughPut.ToString()+" messages/minute";
+            Throughput = _hubDataReceiver.throughPut.ToString() + " messages/minute";
             DeviceToHubDelay = _hubDataReceiver.deviceToHubDelay;
             EndToEndDelay = _hubDataReceiver.e2EDelay;
 
-            if (TaskTotalCount == TaskCompleteCount&&TaskTotalCount!=0)
+            if (TaskTotalCount == TaskCompleteCount && TaskTotalCount != 0)
             {
                 //stop working threads
                 _hubDataReceiver.PauseReceive();
@@ -350,23 +356,24 @@ namespace StressLoadDemo.ViewModel
                 TransformDataToLines(_deviceNumberBuffer, ref _deviceLineBuffer);
                 TransformDataToLines(_messageNumberBuffer, ref _messageLineBuffer);
             }
-            else { 
-            TransformDataToLines(
-                _deviceNumberBuffer
-                .ToList()
-                .Skip((int)Math.Max(0, _deviceNumberBuffer.Count - CanvasWidth / 2))
-                .ToList()
-                , ref _deviceLineBuffer);
-            TransformDataToLines(
-                _messageNumberBuffer
-                .ToList()
-                .Skip((int)Math.Max(0, _messageNumberBuffer.Count - CanvasWidth / 2))
-                .ToList()
-                , ref _messageLineBuffer);
+            else
+            {
+                TransformDataToLines(
+                    _deviceNumberBuffer
+                    .ToList()
+                    .Skip((int)Math.Max(0, _deviceNumberBuffer.Count - CanvasWidth / 2))
+                    .ToList()
+                    , ref _deviceLineBuffer);
+                TransformDataToLines(
+                    _messageNumberBuffer
+                    .ToList()
+                    .Skip((int)Math.Max(0, _messageNumberBuffer.Count - CanvasWidth / 2))
+                    .ToList()
+                    , ref _messageLineBuffer);
             }
             DeviceLines = new ObservableCollection<MyLine>(_deviceLineBuffer);
             MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);
-            
+
 
         }
 
@@ -379,7 +386,7 @@ namespace StressLoadDemo.ViewModel
                 var rangeY = maxY - data.Min();
                 var scaleY = CanvasHeight / rangeY;
                 if (rangeY == 0 && maxY == 0) return;
-               
+
                 var verticalShift = maxY > 0 ? scaleY * maxY : -scaleY * maxY;
                 var xUnit = CanvasWidth / (data.Count - 1);
                 double prevX = 0, prevY = verticalShift - scaleY * data[0];

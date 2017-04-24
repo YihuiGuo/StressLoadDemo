@@ -45,7 +45,7 @@ namespace StressLoadDemo.ViewModel
         public PhaseStatus _currentPhaseStatus;
 
         private int _progressBarValue;
-        private Brush []_lableBgColors;
+        private Brush[] _lableBgColors;
         /// <summary>
         /// Initializes a new instance of the TabDashboardViewModel class.
         /// </summary>
@@ -76,7 +76,7 @@ namespace StressLoadDemo.ViewModel
             _currentPhaseStatus = PhaseStatus.Succeeded;
             _dataProvider = provider;
             _canStartTest = false;
-            
+
         }
 
         #region BindingProperties
@@ -299,7 +299,8 @@ namespace StressLoadDemo.ViewModel
         void SetDeployStatus(DeployStatusUpdateMessage status)
         {
             var deployPhase = (int)status.Phase;
-            switch(deployPhase){
+            switch (deployPhase)
+            {
                 case 1:
                     PoolLableBgColor = Brushes.DarkGray;
                     ProgressValue = 1;
@@ -319,7 +320,7 @@ namespace StressLoadDemo.ViewModel
                     break;
             }
             var CurrentPhaseStatus = status.Status;
-            
+
         }
         void MoveOnToMonitor()
         {
@@ -327,52 +328,7 @@ namespace StressLoadDemo.ViewModel
             mainvm.SelectedTabIndex = 2;
             mainvm.MonitorStart = true;
         }
-        //void ObserveData(Object source, System.Timers.ElapsedEventArgs e)
-        //{
-        //    DeviceRealTimeNumber = _dataProvider.GetDeviceNumber();
-        //    MessageRealTimeNumber = _dataProvider.GetMessageNumber();
-        //    _messageNumberBuffer.Enqueue(_messageRealTimeNumber);
-        //    _deviceNumberBuffer.Enqueue(DeviceRealTimeNumber);
-        //    if (_deviceNumberBuffer.Count > CanvasWidth/2)
-        //    {
-        //        _deviceNumberBuffer.Dequeue();
-        //    }
-        //    if (_messageNumberBuffer.Count > CanvasWidth/2)
-        //    {
-        //        _messageNumberBuffer.Dequeue();
-        //    }
-        //    TransformDataToLines(_deviceNumberBuffer.ToList(),ref _deviceLineBuffer);
-        //    TransformDataToLines(_messageNumberBuffer.ToList(), ref _messageLineBuffer);
 
-        //    DeviceLines = new ObservableCollection<MyLine>(_deviceLineBuffer);
-        //    MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);
-        //}
-
-        //void TransformDataToLines(List<double> data,ref List<MyLine> targetLines)
-        //{
-        //    targetLines = new List<MyLine>();
-        //    if (data.Count > 1)
-        //    {
-        //        var maxY = data.Max();
-        //        var rangeY = maxY - data.Min();
-        //        var scaleY = CanvasHeight / rangeY;
-        //        if (rangeY == 0) scaleY = 1;
-        //        var verticalShift = maxY > 0 ? scaleY * maxY : -scaleY * maxY;
-        //        var xUnit = CanvasWidth / (data.Count - 1);
-        //        double prevX = 0, prevY = verticalShift-scaleY*data[0];
-        //        var temp = new List<MyLine>();
-        //        data.ForEach(p =>
-        //        {
-        //            p = verticalShift - p * scaleY;
-
-        //            temp.Add(new MyLine() { X1 = prevX, Y1 = prevY, X2 = prevX + xUnit, Y2 = p });
-
-        //            prevX += xUnit;
-        //            prevY = p;
-        //        });
-        //        targetLines = temp;
-        //    }
-        //}
         void ProcessRunConfigValue(IStressDataProvider provider)
         {
             provider.BatchKey = _batchAccountKey;
@@ -382,27 +338,22 @@ namespace StressLoadDemo.ViewModel
             provider.StorageAccountConectionString = _storageAccountConnectionString;
             provider.Run();
 
-            //DeviceLines=new ObservableCollection<MyLine>();
-            //MessageLines= new ObservableCollection<MyLine>();
-            //_deviceNumberBuffer = new Queue<double>();
-            //_messageNumberBuffer = new Queue<double>();
-            //_refreshDataTimer.Enabled = true;
         }
 
         void TryActivateButton()
         {
-            if (!(string.IsNullOrEmpty(_hubOwnerConnectionString)||
-                string.IsNullOrEmpty(_eventHubEndpoint)||
-                string.IsNullOrEmpty(_batchAccountKey)||
-                string.IsNullOrEmpty(_batchServiceUrl)||
+            if (!(string.IsNullOrEmpty(_hubOwnerConnectionString) ||
+                string.IsNullOrEmpty(_eventHubEndpoint) ||
+                string.IsNullOrEmpty(_batchAccountKey) ||
+                string.IsNullOrEmpty(_batchServiceUrl) ||
                 string.IsNullOrEmpty(_storageAccountConnectionString))
                 )
             {
-                CanStartTest=true;
+                CanStartTest = true;
             }
             else
             {
-               CanStartTest=false;
+                CanStartTest = false;
             }
         }
     }
