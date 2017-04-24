@@ -22,8 +22,8 @@ namespace StressLoadDemo.ViewModel
 {
     public class TabMonitorViewModel : ViewModelBase
     {
-        private const double CanvasWidth = 373;
-        private const double CanvasHeight = 194;
+        private const double CanvasWidth = 415;
+        private const double CanvasHeight = 216;
         private readonly Timer _refreshDataTimer, _refreshTaskTimer;
         private double _deviceRealTimeNumber, _messageRealTimeNumber;
         private ObservableCollection<MyLine> _deviceLines, _messageLines;
@@ -36,23 +36,31 @@ namespace StressLoadDemo.ViewModel
         private string _consumerGroupName;
         private bool _refreshBtnEnabled;
         private Visibility _shadeVisibility;
+        private string _taskStatus;
         private int _taskActiveCount, _taskRunningCount, _taskCompletedCount, _taskTotalCount;
+        private string _messageContent, _fromDevice;
+        bool _txtEnabled, _comboEnabled;
+        string _elapasedTime;
+        string _startTime;
         private ObservableCollection<string> _partitions { get; set; }
         string _testRunTime, _throughput, _d2hDelay, _e2eDelay;
         public TabMonitorViewModel(IStressDataProvider provider)
         {
             _consumerGroupName = "$Default";
             _selectedPartition = "0";
+            _startTime = "0";
             _dataProvider = provider;
             _shadeVisibility = Visibility.Hidden;
             _partitions = new ObservableCollection<string>();
-
+            _messageContent = "N/A";_fromDevice = "N/A";
+            TestRunTime = "N/A"; Throughput = "N/A";
+            DeviceToHubDelay = "N/A";
+            _taskStatus = "N/A";
             Messenger.Default.Register<IStressDataProvider>(
                this,
                "StartMonitor",
                ProcessMonitorConfig
                );
-
             _refreshDataTimer = new Timer();
             _refreshTaskTimer = new Timer();
             _refreshDataTimer.Elapsed += ObserveData;
@@ -68,9 +76,76 @@ namespace StressLoadDemo.ViewModel
 
 
         #region UIBindingProperties
+        public string ElapsedTime
+        {   get { return _elapasedTime; }
+            set
+            {
+                _elapasedTime = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string StartTime
+        {
+            get { return _startTime; }
+            set
+            {
+                _startTime = value;
+                RaisePropertyChanged();
+            }
+        }
 
+        public bool TxtEnabled
+        {
+            get { return _txtEnabled; }
+            set
+            {
+                _txtEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool ComboEnabled
+        {
+            get { return _comboEnabled; }
+            set
+            {
+                _comboEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string TaskStatus
+        {
+            get { return _taskStatus; }
+            set
+            {
+                _taskStatus = value;
+                RaisePropertyChanged();
+            }
+        }
         public RelayCommand OpenBrowser { get; set; }
         public RelayCommand Reload { get; set; }
+
+
+        public string MessageContent
+        {
+            get { return _messageContent; }
+            set
+            {
+                _messageContent = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public string FromDevice
+        {
+            get { return _fromDevice; }
+            set
+            {
+                _fromDevice = value;
+                RaisePropertyChanged();
+            }
+        }
 
         public string TestRunTime
         {
@@ -98,16 +173,6 @@ namespace StressLoadDemo.ViewModel
             set
             {
                 _d2hDelay = value;
-                RaisePropertyChanged();
-            }
-        }
-
-        public string EndToEndDelay
-        {
-            get { return _e2eDelay; }
-            set
-            {
-                _e2eDelay = value;
                 RaisePropertyChanged();
             }
         }
@@ -289,8 +354,7 @@ namespace StressLoadDemo.ViewModel
             DeviceLines = new ObservableCollection<MyLine>();
             MessageLines = new ObservableCollection<MyLine>();
             DeviceRealTimeNumber = 0; MessageRealTimeNumber = 0;
-            TestRunTime = "N/A"; Throughput = "N/A";
-            EndToEndDelay = ""; DeviceToHubDelay = "";
+            
         }
 
         public void ProcessMonitorConfig(IStressDataProvider provider)
@@ -298,6 +362,7 @@ namespace StressLoadDemo.ViewModel
             _hubDataReceiver = new HubReceiver(provider);
             _hubDataReceiver.StartReceive();
             StartCollecting();
+            IsSwitchingEnabled(true);
         }
 
         void ObserveTask(object sender, ElapsedEventArgs e)
@@ -310,10 +375,11 @@ namespace StressLoadDemo.ViewModel
             {
                 var job = batchClient.JobOperations.GetJob(_dataProvider.BatchJobId);
                 var list = job.ListTasks();
-                TaskTotalCount = list.Count();
-                TaskActiveCount = list.Count(m => m.State == TaskState.Active || m.State == TaskState.Preparing);
-                TaskRunningCount = list.Count(m => m.State == TaskState.Running);
-                TaskCompleteCount = list.Count(m => m.State == TaskState.Completed);
+                var totalCount = list.Count();
+                var activeCount = list.Count(m => m.State == TaskState.Active || m.State == TaskState.Preparing);
+                var runningCount = list.Count(m => m.State == TaskState.Running);
+                var completeCount = list.Count(m => m.State == TaskState.Completed);
+                TaskStatus = $"(Total:{totalCount}  Active:{activeCount}  Running:{runningCount}  Completed:{completeCount})";
             }
         }
 
@@ -341,10 +407,35 @@ namespace StressLoadDemo.ViewModel
             _messageNumberBuffer.Add(_messageRealTimeNumber);
             _deviceNumberBuffer.Add(_deviceRealTimeNumber);
 
-            TestRunTime = _hubDataReceiver.runningTime.ToString();
+            var runtimestring = _hubDataReceiver.runningTime.ToString();
+           
+            var delaystring = _hubDataReceiver.deviceToHubDelay;
+            if (!string.IsNullOrEmpty(runtimestring))
+            {
+                try
+                {
+                    TestRunTime = runtimestring.Substring(0, 11);
+                }
+                catch
+                {
+                    TestRunTime = "N/A";
+                }
+            }
+            if (!string.IsNullOrEmpty(delaystring))
+            {
+                try
+                {
+                    DeviceToHubDelay = delaystring.Substring(0, 11);
+                }
+                catch
+                {
+                    DeviceToHubDelay = "N/A";
+                }
+            }
+            MessageContent = _hubDataReceiver.sampleContent;
             Throughput = _hubDataReceiver.throughPut.ToString() + " messages/minute";
-            DeviceToHubDelay = _hubDataReceiver.deviceToHubDelay;
-            EndToEndDelay = _hubDataReceiver.e2EDelay;
+            FromDevice = _hubDataReceiver.sampleEventSender;
+
 
             if (TaskTotalCount == TaskCompleteCount && TaskTotalCount != 0)
             {
@@ -352,12 +443,15 @@ namespace StressLoadDemo.ViewModel
                 _hubDataReceiver.PauseReceive();
                 _refreshTaskTimer.Enabled = false;
                 _refreshDataTimer.Enabled = false;
-
+                StartTime = "...";
+                ElapsedTime = $"{(int)_hubDataReceiver.runningTime.TotalMinutes} m {(int)_hubDataReceiver.runningTime.TotalSeconds} s";
                 TransformDataToLines(_deviceNumberBuffer, ref _deviceLineBuffer);
                 TransformDataToLines(_messageNumberBuffer, ref _messageLineBuffer);
             }
             else
             {
+                StartTime = "0";
+                ElapsedTime = $"{(int)_hubDataReceiver.runningTime.TotalMinutes} m {(int)_hubDataReceiver.runningTime.TotalSeconds} s";
                 TransformDataToLines(
                     _deviceNumberBuffer
                     .ToList()
@@ -375,6 +469,12 @@ namespace StressLoadDemo.ViewModel
             MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);
 
 
+        }
+
+        void IsSwitchingEnabled(bool flag)
+        {
+            TxtEnabled = flag;
+            ComboEnabled = flag;
         }
 
         void TransformDataToLines(List<double> data, ref List<MyLine> targetLines)

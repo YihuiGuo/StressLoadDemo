@@ -5,9 +5,9 @@ namespace StressLoadDemo.View
     /// <summary>
     /// Interaction logic for TabDashboardView.xaml
     /// </summary>
-    public partial class TabDashboardView : UserControl
+    public partial class TabResourceView : UserControl
     {
-        public TabDashboardView()
+        public TabResourceView()
         {
             InitializeComponent();
         }

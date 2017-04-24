@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:StressLoadDemo"
         xmlns:view="clr-namespace:StressLoadDemo.View"
         mc:Ignorable="d"
-         Title="MainWindow" Height="Auto" Width="525"
+         Title="MainWindow" Height="{Binding MainHeight}" Width="{Binding MainWidth}"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}" SizeToContent="WidthAndHeight" FontSize="14" ResizeMode="NoResize"
         >
     <Grid Height="Auto">
@@ -15,7 +15,7 @@
                 <view:TabRequirementView/>
             </TabItem>
             <TabItem Header="Resource">
-                <view:TabDashboardView />
+                <view:TabResourceView />
             </TabItem>
             <TabItem Header="Monitor">
                 <view:TabMonitorView/>

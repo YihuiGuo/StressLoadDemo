@@ -19,7 +19,7 @@ namespace StressLoadDemo.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class TabDashboardViewModel : ViewModelBase
+    public class TabResourceViewModel : ViewModelBase
     {
         //max length of data buffered for drawing graph.
         //Hardcoded to the width of the canvas.
@@ -28,19 +28,16 @@ namespace StressLoadDemo.ViewModel
 
         private readonly IStressDataProvider _dataProvider;
 
+        string _specDeviceCount, _specMsgFreq, _specDuration;
         private string _hubOwnerConnectionString;
         private string _eventHubEndpoint;
         private string _batchServiceUrl;
         private string _batchAccountKey;
         private string _storageAccountConnectionString;
         private bool _canStartTest;
-        //private readonly System.Timers.Timer _refreshDataTimer;
         string logmsg;
         bool isLogsChangedPropertyInViewModel;
-        //private double _deviceRealTimeNumber, _messageRealTimeNumber;
-        //private ObservableCollection<MyLine> _deviceLines, _messageLines;
-        //private List<MyLine> _deviceLineBuffer, _messageLineBuffer;
-        //private Queue<double> _deviceNumberBuffer, _messageNumberBuffer;
+
         public DeployPhase _currentDeployPhase;
         public PhaseStatus _currentPhaseStatus;
 
@@ -49,8 +46,14 @@ namespace StressLoadDemo.ViewModel
         /// <summary>
         /// Initializes a new instance of the TabDashboardViewModel class.
         /// </summary>
-        public TabDashboardViewModel(IStressDataProvider provider)
+        public TabResourceViewModel(IStressDataProvider provider)
         {
+            Messenger.Default.Register<RequirementMessage>(
+                this,
+                "AppendRequirementParam",
+                data => AppendToProvider(data)
+                );
+            
             Messenger.Default.Register<IStressDataProvider>(
                 this,
                 "StartTest",
@@ -66,12 +69,18 @@ namespace StressLoadDemo.ViewModel
                "DeployStatus",
                message => SetDeployStatus(message)
                );
+            Messenger.Default.Register<string>(
+               this,
+               "BatchJobId",
+               AppendBatchJobId
+               );
             _lableBgColors = new Brush[5] {
                 Brushes.White,
                 Brushes.White ,
                 Brushes.White ,
                 Brushes.White ,
                 Brushes.White };
+            _specDeviceCount = _specDuration = _specMsgFreq = "Not Specified";
             _currentDeployPhase = DeployPhase.DeployStarted;
             _currentPhaseStatus = PhaseStatus.Succeeded;
             _dataProvider = provider;
@@ -80,6 +89,40 @@ namespace StressLoadDemo.ViewModel
         }
 
         #region BindingProperties
+
+        public string SpecDeviceCount
+        {
+            get { return _specDeviceCount; }
+            set
+            {
+                _specDeviceCount = value;
+                RaisePropertyChanged();
+                TryActivateButton();
+            }
+        }
+
+        public string SpecMsgFreq
+        {
+            get { return _specMsgFreq; }
+            set
+            {
+                _specMsgFreq = value;
+                RaisePropertyChanged();
+                TryActivateButton();
+            }
+        }
+
+        public string SpecDuration
+        {
+            get { return _specDuration; }
+            set
+            {
+                _specDuration = value;
+                RaisePropertyChanged();
+                TryActivateButton();
+            }
+        }
+
         public bool CanStartTest
         {
             get
@@ -255,47 +298,23 @@ namespace StressLoadDemo.ViewModel
             LogMsg += message;
             LogMsg += "\n";
         }
-        //public ObservableCollection<MyLine> MessageLines
-        //{
-        //    get { return _messageLines; }
-        //    set
-        //    {
-        //        _messageLines = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
-        //public ObservableCollection<MyLine> DeviceLines
-        //{
-        //    get
-        //    {
-        //        return _deviceLines;
-        //    }
-        //    set
-        //    {
-        //        _deviceLines = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
 
-        //public double MessageRealTimeNumber
-        //{
-        //    get { return _messageRealTimeNumber; }
-        //    set
-        //    {
-        //        _messageRealTimeNumber = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
 
-        //public double DeviceRealTimeNumber
-        //{
-        //    get { return _deviceRealTimeNumber; }
-        //    set
-        //    {
-        //        _deviceRealTimeNumber = value;
-        //        RaisePropertyChanged();
-        //    }
-        //}
+        public void AppendToProvider(RequirementMessage message)
+        {
+            _dataProvider.NumOfVm = message.VmCount.ToString();
+            _dataProvider.DevicePerVm = message.NumberOfDevicePerVm.ToString();
+            _dataProvider.ExpectTestDuration = message.TestDuration.ToString();
+            _dataProvider.MessagePerMinute = message.MessagePerMinPerDevice;
+            _dataProvider.VmSize = message.AzureVmSize.ToString();
+
+            var devicecountint = int.Parse(_dataProvider.DevicePerVm) * int.Parse(_dataProvider.NumOfVm);
+            var messagefreqint = _dataProvider.MessagePerMinute;
+            SpecDeviceCount = $"Device Number : {devicecountint}";
+            SpecMsgFreq = $"Message Speed: {messagefreqint} messages/minute";
+            SpecDuration = $"Duration: {_dataProvider.ExpectTestDuration} minutes";
+        }
+
         void SetDeployStatus(DeployStatusUpdateMessage status)
         {
             var deployPhase = (int)status.Phase;
@@ -325,10 +344,13 @@ namespace StressLoadDemo.ViewModel
         void MoveOnToMonitor()
         {
             var mainvm = new ViewModelLocator().Main;
-            mainvm.SelectedTabIndex = 2;
             mainvm.MonitorStart = true;
         }
 
+        bool IsDeployValuesValid(IStressDataProvider provider)
+        {
+            return false;
+        }
         void ProcessRunConfigValue(IStressDataProvider provider)
         {
             provider.BatchKey = _batchAccountKey;
@@ -340,13 +362,20 @@ namespace StressLoadDemo.ViewModel
 
         }
 
+        public void AppendBatchJobId(string batchJobId)
+        {
+            _dataProvider.BatchJobId = batchJobId;
+        }
+
         void TryActivateButton()
         {
             if (!(string.IsNullOrEmpty(_hubOwnerConnectionString) ||
                 string.IsNullOrEmpty(_eventHubEndpoint) ||
                 string.IsNullOrEmpty(_batchAccountKey) ||
                 string.IsNullOrEmpty(_batchServiceUrl) ||
-                string.IsNullOrEmpty(_storageAccountConnectionString))
+                string.IsNullOrEmpty(_storageAccountConnectionString) ||
+                _dataProvider.MessagePerMinute == 0
+                )
                 )
             {
                 CanStartTest = true;

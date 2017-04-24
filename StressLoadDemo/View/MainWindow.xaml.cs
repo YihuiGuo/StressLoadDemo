@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using GalaSoft.MvvmLight.Messaging;
+using System.Windows;
 
 namespace StressLoadDemo
 {
@@ -8,7 +9,7 @@ namespace StressLoadDemo
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {
+        {  
             InitializeComponent();
         }
     }

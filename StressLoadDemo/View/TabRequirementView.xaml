@@ -7,26 +7,63 @@
              mc:Ignorable="d" 
              DataContext="{Binding Source={StaticResource Locator},Path=RequireTab}" Width="830" Height="540">
     <Grid Background="#FFE5E5E5" Width="830">
-        <Label x:Name="LbExpectedDeviceCount" Content="Total Device Count" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
-        <TextBox x:Name="TxtBoxExpectedDeviceCount" HorizontalAlignment="Left" Height="23" Margin="235,9,0,0" TextWrapping="Wrap" Text="{Binding TotalDevice,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
-        <Label x:Name="LbExpectedMsgFreq" Content="Message per Minute per Device" HorizontalAlignment="Left" Margin="0,115,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
-        <TextBox x:Name="TxtBoxExpectedMsgFreq" HorizontalAlignment="Left" Height="23" Margin="235,120,0,0" TextWrapping="Wrap" Text="{Binding MessagePerMinPerDevice,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
-        <Label x:Name="LbExpectedDuration" Content="Expected Test Duration(in Minute)" HorizontalAlignment="Left" Margin="0,242,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
-        <TextBox x:Name="TxtBoxExpectedDuration" HorizontalAlignment="Left" Height="23" Margin="235,247,0,0" TextWrapping="Wrap" Text="{Binding TestDuration,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
-        <Button x:Name="BtnSwitchTab" IsEnabled="{Binding ButtonEnabled}" Command="{Binding MoveOnToResource }" Content="Go Assign Azure Resource" HorizontalAlignment="Left" Margin="10,338,0,0" VerticalAlignment="Top" Width="375" Height="25" FontSize="14"/>
-        <Label Content="[Unit Level]&#x9;&#x9;[Throughput Per unit]&#xD;&#xA;--------------&#x9;&#x9;-------------------------&#xA;     S1&#x9;&#x9;&#x9;&lt;7.2K message/min&#xA;     S2&#x9;&#x9;&#x9;Up to 7.2K message/min&#xA;     S3&#x9;&#x9;&#x9;Up to 360K message/min" HorizontalAlignment="Left" Margin="437,66,0,0" VerticalAlignment="Top" Height="110" Width="370" FontWeight="Bold"/>
-        <Label Content="[Machine Size]&#x9;[Configuration]&#x9;[Supporting Device]&#xD;&#xA;----------------&#x9;-----------------&#x9;----------------------&#xA;     small&#x9;&#x9;1 Core, 1.75 GB&#x9;&#x9;6K &#xA;     medium&#x9;2 Core, 3.5 GB&#x9;&#x9;12K &#xA;     large&#x9;&#x9;4 Core, 7 GB&#x9;&#x9;24K&#xA;     extralarge&#x9;8 Core, 14 GB&#x9;&#x9;48K " HorizontalAlignment="Left" Margin="437,198,0,0" VerticalAlignment="Top" Height="123" Width="370" FontWeight="Bold"/>
-        <Label Content="{Binding MessagePerMin}" HorizontalAlignment="Left" Margin="231,427,0,0" VerticalAlignment="Top"/>
-        <Label Content="{Binding TotalDevice}" HorizontalAlignment="Left" Margin="230,476,0,0" VerticalAlignment="Top"/>
-        <Label Content="{Binding HubSkuRecommendation}" HorizontalAlignment="Left" Margin="308,427,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label Content="{Binding VmSkuRecommendation}" HorizontalAlignment="Left" Margin="308,476,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label Content="Expected Hub Message/Minute =" HorizontalAlignment="Left" Margin="10,427,0,0" VerticalAlignment="Top"/>
-        <Label Content="Expected Total Device Number  =" HorizontalAlignment="Left" Margin="10,476,0,0" VerticalAlignment="Top"/>
-        <Label Content="IoTHub:&#xA;   60K Devices, each sending 6 messages/min  =&gt; S3 x 1&#xA;   600K Devices, each sending 6 messages/min =&gt; S3 x 10&#xA;   1.2K Devices, each sending 6 messages/min =&gt; S2 x1&#xA;  &#xA; Virtual Machine:&#xA;    10K Devices =&gt; small x 1&#xA;    20K Devices =&gt; medium x 1/ small x 2&#xA;    80K Devices =&gt; extralarge x 1/large x 2&#xA;" HorizontalAlignment="Left" Margin="437,340,0,0" VerticalAlignment="Top" Height="186" Width="370"/>
+        <Label x:Name="LbExpectedDeviceCount" Content="Total Device Count" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
+        <TextBox x:Name="TxtBoxExpectedDeviceCount" HorizontalAlignment="Left" Height="23" Margin="235,25,0,0" TextWrapping="Wrap" Text="{Binding TotalDevice,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
+        <Label x:Name="LbExpectedMsgFreq" Content="Message per Minute per Device" HorizontalAlignment="Left" Margin="1,57,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
+        <TextBox x:Name="TxtBoxExpectedMsgFreq" HorizontalAlignment="Left" Height="23" Margin="236,62,0,0" TextWrapping="Wrap" Text="{Binding MessagePerMinPerDevice,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
+        <Label x:Name="LbExpectedDuration" Content="Expected Test Duration(in Minute)" HorizontalAlignment="Left" Margin="0,94,0,0" VerticalAlignment="Top" Height="32" FontSize="14"/>
+        <TextBox x:Name="TxtBoxExpectedDuration" HorizontalAlignment="Left" Height="23" Margin="235,99,0,0" TextWrapping="Wrap" Text="{Binding TestDuration,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Width="150"/>
+        <Label Content="[Unit Level]&#x9;&#x9;[Throughput Per unit]&#xD;&#xA;--------------&#x9;&#x9;-------------------------&#xA;     S1&#x9;&#x9;&#x9;&lt;7.2K message/min&#xA;     S2&#x9;&#x9;&#x9;Up to 7.2K message/min&#xA;     S3&#x9;&#x9;&#x9;Up to 360K message/min" HorizontalAlignment="Left" Margin="437,104,0,0" VerticalAlignment="Top" Height="110" Width="370" FontWeight="Bold"/>
+        <Label Content="{Binding MessagePerMin}" HorizontalAlignment="Left" Margin="298,231,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding TotalDevice}" HorizontalAlignment="Left" Margin="298,345,0,0" VerticalAlignment="Top"/>
+        <Label Content="{Binding HubSkuRecommendation}" HorizontalAlignment="Left" Margin="298,267,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label Content="{Binding VmSkuRecommendation}" HorizontalAlignment="Left" Margin="298,389,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label Content="Expected Hub Message/Minute " HorizontalAlignment="Left" Margin="13,231,0,0" VerticalAlignment="Top"/>
+        <Label Content="Expected Total Device Number  " HorizontalAlignment="Left" Margin="14,345,0,0" VerticalAlignment="Top"/>
+        <Label Content="IoTHub:&#xA;   60K Devices, each sending 6 messages/min  =&gt; S3 x 1&#xA;   600K Devices, each sending 6 messages/min =&gt; S3 x 10&#xA;   1.2K Devices, each sending 6 messages/min =&gt; S2 x1&#xA;  &#xA; Virtual Machine:&#xA;    10K Devices =&gt; small x 1&#xA;    20K Devices =&gt; small x 2&#xA;    80K Devices =&gt; small x 8&#xA;" HorizontalAlignment="Left" Margin="437,325,0,0" VerticalAlignment="Top" Height="162" Width="370"/>
         <Label Content="Azure Resource Capabilities Reference:" HorizontalAlignment="Left" Margin="437,10,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
-        <Label Content="IoT Hub Messaging Capabilities" Foreground="Gray" HorizontalAlignment="Left" Margin="437,41,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" FontStyle="Italic"/>
-        <Label Content="Virtual Machine Processing Capabilities" Foreground="Gray" HorizontalAlignment="Left" Margin="437,173,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.286,0.5" FontSize="14" FontWeight="Bold" FontStyle="Italic"/>
-        <Label Content="Examples" Foreground="Gray" HorizontalAlignment="Left" Margin="437,313,0,0" VerticalAlignment="Top" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
+        <Label Content="IoT Hub Messaging Capabilities" Foreground="Gray" HorizontalAlignment="Left" Margin="437,55,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" FontStyle="Italic"/>
+        <Label Content="Examples" Foreground="Gray" HorizontalAlignment="Left" Margin="437,274,0,0" VerticalAlignment="Top" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
+        <Button x:Name="button" Command="{Binding OpenHubLink}" Content="Capacity Link"  HorizontalAlignment="Left" Margin="437,213,0,0" VerticalAlignment="Top" Width="92">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <TextBlock TextDecorations="Underline">
+                <ContentPresenter />
+                    </TextBlock>
+                </ControlTemplate>
+            </Button.Template>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="Blue" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button x:Name="button_Copy" Command="{Binding OpenPriceLink}" Content="Price Link" HorizontalAlignment="Left" Margin="580,214,0,0" VerticalAlignment="Top" Width="75">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <TextBlock TextDecorations="Underline">
+                <ContentPresenter />
+                    </TextBlock>
+                </ControlTemplate>
+            </Button.Template>
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="Blue" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="Red" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Label Content="Recommended Hub Size and Unit Number" HorizontalAlignment="Left" Margin="13,267,0,0" VerticalAlignment="Top"/>
+        <Label Content="Recommended VM Core Number" HorizontalAlignment="Left" Margin="15,389,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </UserControl>

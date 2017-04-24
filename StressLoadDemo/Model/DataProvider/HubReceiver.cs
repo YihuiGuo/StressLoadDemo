@@ -26,10 +26,13 @@ namespace StressLoadDemo.Model.DataProvider
         public string  deviceToHubDelay;
         public string e2EDelay;
         public string sampleContent;
+        public string sampleEventSender;
         public bool pause;
+        Stopwatch stopwatch;
         static EventHubClient _eventHubClient;
         public HubReceiver(IStressDataProvider provider)
         {
+            try { 
             var builder = IotHubConnectionStringBuilder.Create(provider.HubOwnerConectionString);
             configSettings = new Settings();
             configSettings.ConnectionString = $"Endpoint={provider.EventHubEndpoint};SharedAccessKeyName={builder.SharedAccessKeyName};SharedAccessKey={builder.SharedAccessKey}";
@@ -40,6 +43,11 @@ namespace StressLoadDemo.Model.DataProvider
             pause = false;
             workThread = new Thread(() => FetchHubData());
             workThread.Start();
+            }
+            catch
+            {
+
+            }
         }
 
         public void StartReceive()
@@ -53,6 +61,11 @@ namespace StressLoadDemo.Model.DataProvider
         {
             pause = true;
             totalDevice = 0;totalMessage = 0;
+            deviceToHubDelay = "N/A"; e2EDelay = "N/A";
+            sampleContent = "N/A";sampleEventSender = "N/A";
+            stopwatch = Stopwatch.StartNew();
+            throughPut = 0;
+
         }
 
         public void SetPartitionId(int targetid)
@@ -81,21 +94,29 @@ namespace StressLoadDemo.Model.DataProvider
 
             var consumerGroup = _eventHubClient.GetConsumerGroup(configSettings.GroupName);
             var receiver = consumerGroup.CreateReceiver(configSettings.PartitionId, configSettings.StartingDateTimeUtc);
-            var stopwatch = Stopwatch.StartNew();
+            stopwatch = Stopwatch.StartNew();
             while (!pause)
             {
-                var eventData = receiver.Receive(TimeSpan.FromSeconds(1));
-                if (eventData != null)
+                try
                 {
-                    indicators.Push(eventData);
-                    totalDevice = indicators.TotalDevices;
-                    totalMessage = indicators.TotalMessages;
-                    currentDate = DateTime.Now;
-                    runningTime = stopwatch.Elapsed;
-                    throughPut = (int)(indicators.TotalMessages / stopwatch.Elapsed.TotalMinutes);
-                    deviceToHubDelay = FormatDelay(indicators.DeviceToIoTHubDelay.StreamAvg);
-                    e2EDelay = FormatDelay(indicators.E2EDelay.StreamAvg);
-                    sampleContent = $"from" + $" [{indicators.SampleEventSender}]";
+                    var eventData = receiver.Receive(TimeSpan.FromSeconds(1));
+                    if (eventData != null)
+                    {
+                        indicators.Push(eventData);
+                        totalDevice = indicators.TotalDevices;
+                        totalMessage = indicators.TotalMessages;
+                        currentDate = DateTime.Now;
+                        runningTime = stopwatch.Elapsed;
+                        throughPut = (int)(indicators.TotalMessages / stopwatch.Elapsed.TotalMinutes);
+                        deviceToHubDelay = FormatDelay(indicators.DeviceToIoTHubDelay.StreamAvg);
+                        e2EDelay = FormatDelay(indicators.E2EDelay.StreamAvg);
+                        sampleContent = indicators.SampleEvent;
+                        sampleEventSender = indicators.SampleEventSender;
+                    }
+                }
+                catch
+                {
+                    continue;
                 }
                 Thread.Sleep(100);
             }

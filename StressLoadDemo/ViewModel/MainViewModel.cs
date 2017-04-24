@@ -28,12 +28,56 @@ namespace StressLoadDemo.ViewModel
         private int _selectedTabIndex;
         private bool _testStart;
         private bool _monitorStart;
+        int[] tabW = { 830, 830, 930 };
+        int[] tabH = { 540, 710, 600 };
+        int _mainW, _mainH;
         public int SelectedTabIndex
         {
             get { return _selectedTabIndex; }
             set
             {
+                MainWidth = tabW[_selectedTabIndex];
+                MainHeight = tabH[_selectedTabIndex];
+                handleTabSwitch(value,_selectedTabIndex);
                 _selectedTabIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        void handleTabSwitch(int newValue,int prevValue)
+        {
+            if (prevValue == 0)
+            {
+                //every time user leaves tab #1, pass user input into tab#2.
+                var reqTabVM = new ViewModelLocator().RequireTab;
+                if (reqTabVM.SendSpecToTab2.CanExecute(reqTabVM))
+                {
+                    reqTabVM.SendSpecToTab2.Execute(reqTabVM);
+                }
+            }
+            if(newValue==1){
+                //every time user gets into 
+            }
+            //else if (prevVlaue == 2)
+            //{
+
+            //}
+        }
+        public int MainWidth
+        {
+            get { return _mainW; }
+            set {
+                _mainW = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public int MainHeight
+        {
+            get { return _mainH; }
+            set
+            {
+                _mainH = value;
                 RaisePropertyChanged();
             }
         }
@@ -43,8 +87,9 @@ namespace StressLoadDemo.ViewModel
             get { return _monitorStart; }
             set
             {
-                if (value)
+                if (value!=_monitorStart)
                 {
+                    _monitorStart = value;
                     Messenger.Default.Send<IStressDataProvider>(_dataProvider, "StartMonitor");
                 }
             }
@@ -65,16 +110,7 @@ namespace StressLoadDemo.ViewModel
         public MainViewModel(IStressDataProvider provider)
         {
             _dataProvider = provider;
-            Messenger.Default.Register<RequirementMessage>(
-                this,
-                "AppendRequirementParam",
-                AppendToProvider
-                );
-            Messenger.Default.Register<string>(
-                this,
-                "BatchJobId",
-                AppendBatchJobId
-                );
+
         }
 
         public void AppendBatchJobId(string batchJobId)

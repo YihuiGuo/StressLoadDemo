@@ -45,7 +45,7 @@ namespace StressLoadDemo.ViewModel
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<TabRequirementViewModel>();
-            SimpleIoc.Default.Register<TabDashboardViewModel>();
+            SimpleIoc.Default.Register<TabResourceViewModel>();
             SimpleIoc.Default.Register<TabMonitorViewModel>();
             SimpleIoc.Default.Register<IStressDataProvider,StressLoadDataProvider>();
         }
@@ -65,11 +65,11 @@ namespace StressLoadDemo.ViewModel
             }
         }
 
-        public TabDashboardViewModel DashboardTab
+        public TabResourceViewModel ResourceTab
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<TabDashboardViewModel>();
+                return ServiceLocator.Current.GetInstance<TabResourceViewModel>();
             }
         }
 

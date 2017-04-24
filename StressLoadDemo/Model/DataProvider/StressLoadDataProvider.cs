@@ -55,31 +55,38 @@ namespace StressLoadDemo.Model.DataProvider
             provider.PutConfigValue("DeviceClientEndpoint", HubOwnerConectionString);
             provider.PutConfigValue("EventHubEndpoint", EventHubEndpoint);
             provider.PutConfigValue("Transport", "Mqtt");
-            DeployAndStartStressLoad(provider).Wait();
+            DeployAndStartStressLoad(provider);
         }
 
         async Task DeployAndStartStressLoad(IConfigurationProvider provider)
         {
-            var devicePerVm = int.Parse(provider.GetConfigValue("DevicePerVm"));
-            var numofVM = int.Parse(provider.GetConfigValue("NumofVm"));
-            TestJob job = new TestJob
+            try
             {
-                JobId = DateTime.UtcNow.Ticks,
-                ConfigureProvider = provider,
-                DevicePerVm = devicePerVm,
-                Message = provider.GetConfigValue("Message"),
-                Transport = provider.GetConfigValue("Transport"),
-                MessagePerMin = int.Parse(provider.GetConfigValue("MessagePerMin")),
-                NumofVm = numofVM,
-                SizeOfVM = (VmSize)Enum.Parse(typeof(VmSize), provider.GetConfigValue("SizeOfVM")),
-                DeviceClientEndpoint = provider.GetConfigValue("DeviceClientEndpoint"),
-                DurationInMin = int.Parse(provider.GetConfigValue("DurationInMin"))
-            };
-            var batch = new BatchConnector(provider);
-            BatchHelper.Connector = batch;
-            await job.Deploy();
-            //StartRead();
-            await job.DeleteTest();
+                var devicePerVm = int.Parse(provider.GetConfigValue("DevicePerVm"));
+                var numofVM = int.Parse(provider.GetConfigValue("NumofVm"));
+                TestJob job = new TestJob
+                {
+                    JobId = DateTime.UtcNow.Ticks,
+                    ConfigureProvider = provider,
+                    DevicePerVm = devicePerVm,
+                    Message = provider.GetConfigValue("Message"),
+                    Transport = provider.GetConfigValue("Transport"),
+                    MessagePerMin = int.Parse(provider.GetConfigValue("MessagePerMin")),
+                    NumofVm = numofVM,
+                    SizeOfVM = (VmSize)Enum.Parse(typeof(VmSize), provider.GetConfigValue("SizeOfVM")),
+                    DeviceClientEndpoint = provider.GetConfigValue("DeviceClientEndpoint"),
+                    DurationInMin = int.Parse(provider.GetConfigValue("DurationInMin"))
+                };
+                var batch = new BatchConnector(provider);
+                BatchHelper.Connector = batch;
+                await job.Deploy();
+                //StartRead();
+                await job.DeleteTest();
+            }
+            catch(Exception e)
+            {
+                Messenger.Default.Send($"Terminated Due to error '{e.Message}', please check all your inputs are correct.", "RunningLog");
+            }
         }
     }
 }

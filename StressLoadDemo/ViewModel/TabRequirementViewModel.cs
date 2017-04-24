@@ -40,7 +40,16 @@ namespace StressLoadDemo.ViewModel
             _buttonEnabled = false;
         }
 
-        public RelayCommand MoveOnToResource=>new RelayCommand(
+        public RelayCommand OpenHubLink => new RelayCommand(()=>
+        {
+            System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-quotas-throttling");
+        });
+
+        public RelayCommand OpenPriceLink => new RelayCommand(()=> 
+        {
+            System.Diagnostics.Process.Start("https://www.azure.cn/pricing/details/iot-hub/");
+        });
+        public RelayCommand SendSpecToTab2 => new RelayCommand(
             () =>
             {
                 RequirementMessage message = new RequirementMessage()
@@ -49,16 +58,15 @@ namespace StressLoadDemo.ViewModel
                     IoTHubUnitCount = _hubInfo.UnitCount,
                     AzureVmSize = _vmInfo.Size,
                     VmCount = _vmInfo.VmCount,
-                    MessagePerMinPerDevice =_totalMessagePerMinute/_totalDevice,
-                    NumberOfDevicePerVm = int.Parse(TotalDevice)/_vmInfo.VmCount,
+                    MessagePerMinPerDevice = _totalMessagePerMinute / _totalDevice,
+                    NumberOfDevicePerVm = int.Parse(TotalDevice) / _vmInfo.VmCount,
                     TestDuration = _testDuration
 
                 };
 
-                Messenger.Default.Send<RequirementMessage>(message,"AppendRequirementParam");
-                var mainvm = new ViewModelLocator().Main;
-                mainvm.SelectedTabIndex = 1;
-            }
+                Messenger.Default.Send<RequirementMessage>(message, "AppendRequirementParam");
+            },
+            () => ButtonEnabled
             );
         public bool ButtonEnabled
         {

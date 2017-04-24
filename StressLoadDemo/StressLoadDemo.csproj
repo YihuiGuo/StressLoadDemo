@@ -231,7 +231,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\TabDashboardView.xaml">
+    <Page Include="View\TabResourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -258,7 +258,6 @@
     <Compile Include="Model\AzureConstants\HubSku.cs" />
     <Compile Include="Model\AzureConstants\TestJobStatus.cs" />
     <Compile Include="Model\AzureObject\TestJob.cs" />
-    <Compile Include="Model\DataProvider\HubDebugReceiver.cs" />
     <Compile Include="Model\DataProvider\HubReceiver.cs" />
     <Compile Include="Model\DataProvider\ReceiverTool\Settings.cs" />
     <Compile Include="Model\DataProvider\StressLoadDataProvider.cs" />
@@ -270,15 +269,15 @@
     <Compile Include="Model\AzureConstants\VmSku.cs" />
     <Compile Include="Model\DataProvider\ReceiverTool\TimeSeriesContainer.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\TabDashboardViewModel.cs" />
+    <Compile Include="ViewModel\TabResourceViewModel.cs" />
     <Compile Include="ViewModel\TabMonitorViewModel.cs" />
     <Compile Include="ViewModel\TabRequirementViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\TabMonitorView.xaml.cs">
       <DependentUpon>TabMonitorView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\TabDashboardView.xaml.cs">
-      <DependentUpon>TabDashboardView.xaml</DependentUpon>
+    <Compile Include="View\TabResourceView.xaml.cs">
+      <DependentUpon>TabResourceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TabRequirementView.xaml.cs">
       <DependentUpon>TabRequirementView.xaml</DependentUpon>
@@ -324,9 +323,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\DataProvider\NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if not exist "$(TargetDir)\JobBinary" mkdir "$(TargetDir)\JobBinary"
