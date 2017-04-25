@@ -22,6 +22,8 @@ namespace StressLoadDemo.ViewModel
 {
     public class TabMonitorViewModel : ViewModelBase
     {
+        const string AzureCloudAllResourcesPage ="https://ms.portal.azure.com/#blade/HubsExtension/Resources/resourceType/Microsoft.Resources%2Fresources";
+        const string AzureChinaCloudAllResourcesPage ="https://portal.azure.cn/#blade/HubsExtension/Resources/resourceType/Microsoft.Resources%2Fresources";
         private const double CanvasWidth = 415;
         private const double CanvasHeight = 216;
         private readonly Timer _refreshDataTimer, _refreshTaskTimer;
@@ -34,6 +36,7 @@ namespace StressLoadDemo.ViewModel
         private HubReceiver _hubDataReceiver;
         private DateTime _firstDataArriveTime;
         private string _consumerGroupName;
+        private string _azureAllResourceUrl;
         private bool _refreshBtnEnabled;
         private Visibility _shadeVisibility;
         private string _taskStatus;
@@ -44,6 +47,9 @@ namespace StressLoadDemo.ViewModel
         string _startTime;
         private ObservableCollection<string> _partitions { get; set; }
         string _testRunTime, _throughput, _d2hDelay, _e2eDelay;
+        Stopwatch localwatch;
+        string _localRunTime;
+        bool _portalBtnEnabled;
         public TabMonitorViewModel(IStressDataProvider provider)
         {
             _consumerGroupName = "$Default";
@@ -55,7 +61,7 @@ namespace StressLoadDemo.ViewModel
             _messageContent = "N/A";_fromDevice = "N/A";
             TestRunTime = "N/A"; Throughput = "N/A";
             DeviceToHubDelay = "N/A";
-            _taskStatus = "N/A";
+            _taskStatus = "N/A"; _localRunTime= "N/A";
             Messenger.Default.Register<IStressDataProvider>(
                this,
                "StartMonitor",
@@ -76,6 +82,29 @@ namespace StressLoadDemo.ViewModel
 
 
         #region UIBindingProperties
+
+        public RelayCommand ShowAzurePortal => new RelayCommand(() => {
+            System.Diagnostics.Process.Start(_azureAllResourceUrl);
+        });
+        public string LocalElapsedTime
+        {
+            get { return _localRunTime; }
+            set
+            {
+                _localRunTime = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public bool PortalBtnEnabled
+        {
+            get { return _portalBtnEnabled; }
+            set
+            {
+                _portalBtnEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
         public string ElapsedTime
         {   get { return _elapasedTime; }
             set
@@ -361,10 +390,24 @@ namespace StressLoadDemo.ViewModel
         {
             _hubDataReceiver = new HubReceiver(provider);
             _hubDataReceiver.StartReceive();
+            localwatch = Stopwatch.StartNew();
             StartCollecting();
             IsSwitchingEnabled(true);
+            EnablePortalBtn();
         }
 
+        void EnablePortalBtn()
+        {
+            PortalBtnEnabled = true;
+            if (_dataProvider.BatchUrl.Contains("chinacloudapi.cn"))
+            {
+                _azureAllResourceUrl = AzureChinaCloudAllResourcesPage;
+            }
+            else
+            {
+                _azureAllResourceUrl = AzureCloudAllResourcesPage;
+            }
+        }
         void ObserveTask(object sender, ElapsedEventArgs e)
         {
             //get task running status
@@ -379,13 +422,14 @@ namespace StressLoadDemo.ViewModel
                 var activeCount = list.Count(m => m.State == TaskState.Active || m.State == TaskState.Preparing);
                 var runningCount = list.Count(m => m.State == TaskState.Running);
                 var completeCount = list.Count(m => m.State == TaskState.Completed);
+                _taskTotalCount = totalCount;_taskActiveCount = activeCount;
+                _taskCompletedCount = completeCount;_taskRunningCount = runningCount;
                 TaskStatus = $"(Total:{totalCount}  Active:{activeCount}  Running:{runningCount}  Completed:{completeCount})";
             }
         }
 
         void ObserveData(object sender, ElapsedEventArgs e)
         {
-
             //get partition counts, fill in combo box("lazy" update)
             var queryPartitionNumber = _hubDataReceiver.partitionNumber;
             if (queryPartitionNumber != Partitions.Count)
@@ -440,18 +484,21 @@ namespace StressLoadDemo.ViewModel
             if (TaskTotalCount == TaskCompleteCount && TaskTotalCount != 0)
             {
                 //stop working threads
+                localwatch.Stop();
                 _hubDataReceiver.PauseReceive();
                 _refreshTaskTimer.Enabled = false;
                 _refreshDataTimer.Enabled = false;
-                StartTime = "...";
-                ElapsedTime = $"{(int)_hubDataReceiver.runningTime.TotalMinutes} m {(int)_hubDataReceiver.runningTime.TotalSeconds} s";
+                StartTime = "0";
+                var allsec = (int)_hubDataReceiver.runningTime.TotalSeconds;
+                ElapsedTime = $"{allsec/60} m {allsec%60} s";
                 TransformDataToLines(_deviceNumberBuffer, ref _deviceLineBuffer);
                 TransformDataToLines(_messageNumberBuffer, ref _messageLineBuffer);
             }
             else
             {
-                StartTime = "0";
-                ElapsedTime = $"{(int)_hubDataReceiver.runningTime.TotalMinutes} m {(int)_hubDataReceiver.runningTime.TotalSeconds} s";
+                StartTime = _deviceNumberBuffer.Count >( CanvasWidth / 2)? "...":"0";
+                var allsec = (int)_hubDataReceiver.runningTime.TotalSeconds;
+                ElapsedTime = $"{allsec / 60} m {allsec % 60} s";
                 TransformDataToLines(
                     _deviceNumberBuffer
                     .ToList()
@@ -464,6 +511,18 @@ namespace StressLoadDemo.ViewModel
                     .Skip((int)Math.Max(0, _messageNumberBuffer.Count - CanvasWidth / 2))
                     .ToList()
                     , ref _messageLineBuffer);
+            }
+            var elapsedstring = localwatch.Elapsed.ToString();
+            if (!string.IsNullOrEmpty(localwatch.Elapsed.ToString()))
+            {
+                try
+                {
+                    LocalElapsedTime = elapsedstring.Substring(0, 11);
+                }
+                catch
+                {
+                    LocalElapsedTime = "N/A";
+                }
             }
             DeviceLines = new ObservableCollection<MyLine>(_deviceLineBuffer);
             MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);

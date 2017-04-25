@@ -28,7 +28,7 @@ namespace StressLoadDemo.ViewModel
         private int _selectedTabIndex;
         private bool _testStart;
         private bool _monitorStart;
-        int[] tabW = { 830, 830, 930 };
+        int[] tabW = { 830, 950, 950 };
         int[] tabH = { 540, 710, 600 };
         int _mainW, _mainH;
         public int SelectedTabIndex

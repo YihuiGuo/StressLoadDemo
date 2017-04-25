@@ -5,7 +5,6 @@ using Microsoft.Azure.Batch.Common;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using StressLoadDemo.Helpers.Configuration;
-using StressLoadDemo.Model.AzureConstants;
 using StressLoadDemo.Model.AzureObject;
 using StressLoadDemo.Model.Utility;
 using System;
@@ -129,21 +128,7 @@ namespace StressLoadDemo.Helpers.Batch
                            Phase = DeployPhase.JobStarted,
                            Status = PhaseStatus.Succeeded
                        }, "DeployStatus");
-            while (true)
-            {
-                var list = job.ListTasks();
-                if (list.Count(m => m.State == TaskState.Completed) == list.Count())
-                {
-                    break;
-                }
-
-                await Task.Delay(1000);
-            }
-
-           //Messenger.Default.Send($"{DateTime.Now.ToString("T")} - Delete job from batch", "RunningLog");
-
-           // await DeleteContainersAsync(StorageAccount);
-           // await client.JobOperations.DeleteJobAsync(testJob.BatchJobId);
+            Messenger.Default.Send($"Job has been started, please switch to monitor tab", "RunningLog");
 
             return true;
         }

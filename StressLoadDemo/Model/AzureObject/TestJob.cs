@@ -1,10 +1,5 @@
 ﻿using StressLoadDemo.Helpers.Configuration;
 using StressLoadDemo.Model.AzureConstants;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GalaSoft.MvvmLight.Messaging;
 
 namespace StressLoadDemo.Model.AzureObject

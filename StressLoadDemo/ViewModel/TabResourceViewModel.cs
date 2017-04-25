@@ -311,7 +311,7 @@ namespace StressLoadDemo.ViewModel
             var devicecountint = int.Parse(_dataProvider.DevicePerVm) * int.Parse(_dataProvider.NumOfVm);
             var messagefreqint = _dataProvider.MessagePerMinute;
             SpecDeviceCount = $"Device Number : {devicecountint}";
-            SpecMsgFreq = $"Message Speed: {messagefreqint} messages/minute";
+            SpecMsgFreq = $"Message Speed: {messagefreqint} messages/minute/device";
             SpecDuration = $"Duration: {_dataProvider.ExpectTestDuration} minutes";
         }
 

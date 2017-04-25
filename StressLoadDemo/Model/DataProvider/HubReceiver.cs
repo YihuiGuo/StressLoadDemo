@@ -39,7 +39,7 @@ namespace StressLoadDemo.Model.DataProvider
             configSettings.Path = builder.HostName.Split('.').First();
             configSettings.PartitionId = "0";
             configSettings.GroupName = "$Default";
-            configSettings.StartingDateTimeUtc = DateTime.UtcNow - TimeSpan.FromMinutes(1);
+            configSettings.StartingDateTimeUtc = DateTime.UtcNow - TimeSpan.FromMinutes(2);
             pause = false;
             workThread = new Thread(() => FetchHubData());
             workThread.Start();
@@ -63,7 +63,6 @@ namespace StressLoadDemo.Model.DataProvider
             totalDevice = 0;totalMessage = 0;
             deviceToHubDelay = "N/A"; e2EDelay = "N/A";
             sampleContent = "N/A";sampleEventSender = "N/A";
-            stopwatch = Stopwatch.StartNew();
             throughPut = 0;
 
         }

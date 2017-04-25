@@ -3,7 +3,6 @@
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-              xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
               mc:Ignorable="d"
               DataContext="{Binding Source={StaticResource Locator},Path=MonitorTab}" Height="600" Width="950"
               >
@@ -30,28 +29,34 @@
         </ComboBox>
         <Label x:Name="label1" Content="IoT Hub Message(one partition)" Canvas.ZIndex="4" HorizontalAlignment="Left" Margin="506,70,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
         <Label x:Name="label1_Copy" Content="IoT Hub Device Number (one partition)" Canvas.ZIndex="4" HorizontalAlignment="Left" Margin="37,70,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold"/>
-        <Label x:Name="label2"  Content="{Binding DeviceRealTimeNumber}" HorizontalAlignment="Left" Margin="426,79,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Panel.ZIndex="4"/>
+        <Viewbox Margin="875,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="4" Width="50">
+            <Label x:Name="label2_Copy"  Content="{Binding MessageRealTimeNumber}" HorizontalAlignment="Left"  FontSize="16" Panel.ZIndex="4"/>
+        </Viewbox>
         <Button x:Name="button" Command ="{Binding Reload}" IsEnabled="{Binding RefreshBtnEnabled}" Content="Connect" HorizontalAlignment="Left" Margin="832,22,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Panel.ZIndex="9" Foreground="White" Visibility="{Binding ShadeVisibility}" Margin="594,207,161,293" HorizontalContentAlignment="Center" FontSize="16" FontWeight="Bold" Content="Paused"/>
-        <Label x:Name="label2_Copy"  Content="{Binding MessageRealTimeNumber}" HorizontalAlignment="Left" Margin="905,79,0,0" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Panel.ZIndex="4"/>
-        <GroupBox Header="Details" HorizontalAlignment="Left" Height="208" Margin="10,379,0,0" VerticalAlignment="Top" Width="930">
+        <Viewbox Margin="410,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Panel.ZIndex="4" Width="50">
+            <Label x:Name="label2_Copy1"  Content="{Binding DeviceRealTimeNumber}" HorizontalAlignment="Left"  FontSize="16" Panel.ZIndex="4"/>
+        </Viewbox>
+        <GroupBox Header="Details" HorizontalAlignment="Left" Height="215" Margin="10,375,0,0" VerticalAlignment="Top" Width="930">
             <Grid>
-                <Label Content="Test has been monitoring for" HorizontalAlignment="Left" Margin="434,38,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label Content="Speed Of Pulling Data From Partition:" HorizontalAlignment="Left" Margin="434,102,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label Content="Average Device-To-Hub Delay" HorizontalAlignment="Left" Margin="11,38,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label Content="{Binding TestRunTime}" HorizontalAlignment="Left" Margin="691,38,0,0" VerticalAlignment="Top" Width="144" Height="26"/>
-                <Label Content="{Binding Throughput}" HorizontalAlignment="Left" Margin="691,102,0,0" VerticalAlignment="Top" Width="153"/>
-                <Label Content="{Binding DeviceToHubDelay}" HorizontalAlignment="Left" Margin="252,38,0,0" VerticalAlignment="Top" Width="144"/>
-                <Label x:Name="label3" Content="Task Status" HorizontalAlignment="Left" Margin="11,5,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label x:Name="label3_Copy5" Content="{Binding TaskStatus}" HorizontalAlignment="Left" Margin="117,5,0,0" VerticalAlignment="Top"/>
-                <Label Content="Last Fetched Message Content" HorizontalAlignment="Left" Margin="11,71,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label Content="{Binding MessageContent}" HorizontalAlignment="Left" Margin="252,71,0,0" VerticalAlignment="Top"/>
-                <Label Content="From Device" HorizontalAlignment="Left" Margin="13,102,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                <Label Content="{Binding FromDevice}" HorizontalAlignment="Left" Margin="150,102,0,0" VerticalAlignment="Top"/>
+                <Label Content="Job running time" HorizontalAlignment="Left" Margin="364,40,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label Content="Speed Of Pulling Data From Partition:" HorizontalAlignment="Left" Margin="11,140,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label Content="Average Device-To-Hub Delay" HorizontalAlignment="Left" Margin="11,40,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label Content="{Binding TestRunTime}" HorizontalAlignment="Left" Margin="491,40,0,0" VerticalAlignment="Top" Width="144" Height="26"/>
+                <Label Content="{Binding Throughput}" HorizontalAlignment="Left" Margin="271,140,0,0" VerticalAlignment="Top" Width="153"/>
+                <Label Content="{Binding DeviceToHubDelay}" HorizontalAlignment="Left" Margin="230,40,0,0" VerticalAlignment="Top" Width="144"/>
+                <Label x:Name="label3" Content="Task Status" HorizontalAlignment="Left" Margin="11,9,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label x:Name="label3_Copy5" Content="{Binding TaskStatus}" HorizontalAlignment="Left" Margin="161,9,0,0" VerticalAlignment="Top"/>
+                <Label Content="Last Fetched Message Content" HorizontalAlignment="Left" Margin="11,75,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label Content="{Binding MessageContent}" HorizontalAlignment="Left" Margin="230,75,0,0" VerticalAlignment="Top"/>
+                <Label Content="From Device" HorizontalAlignment="Left" Margin="11,108,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label Content="{Binding FromDevice}" HorizontalAlignment="Left" Margin="230,108,0,0" VerticalAlignment="Top"/>
+                <Label Content="Monitor runnning  time" HorizontalAlignment="Left" Margin="616,40,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                <Label x:Name="label7" Content="{Binding LocalElapsedTime}" HorizontalAlignment="Left" Margin="778,40,0,0" VerticalAlignment="Top"/>
+                <Button x:Name="button1" IsEnabled="{Binding PortalBtnEnabled}" Command="{Binding ShowAzurePortal}" Content="View Resource In Portal" HorizontalAlignment="Left" Margin="754,161,0,0" VerticalAlignment="Top" Width="154" Height="22"/>
 
             </Grid>
         </GroupBox>
-        <Button x:Name="button1" Content="View Resource In Portal" HorizontalAlignment="Left" Margin="37,543,0,0" VerticalAlignment="Top" Width="154" Height="22"/>
         <Image Source="/StressLoadDemo;component/Resource/chart_background.PNG" Width="445" Height="300" Margin="20,66,485,234"/>
         <ItemsControl ItemsSource="{Binding MessageLines}" Margin="498,119,32,265" Panel.ZIndex="8" >
             <ItemsControl.ItemsPanel>
@@ -66,8 +71,8 @@
             </ItemsControl.ItemTemplate>
         </ItemsControl>
         <Image Source="/StressLoadDemo;component/Resource/chart_background.PNG" Width="445" Height="300" Margin="485,66,20,234"/>
-        <Label x:Name="label4" Content="{Binding StartTime}" HorizontalAlignment="Left" Margin="29,334,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="label4_Copy" Content="{Binding StartTime}" HorizontalAlignment="Left" Margin="494,335,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="label4" Content="{Binding StartTime}" HorizontalAlignment="Left" Margin="29,334,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Label x:Name="label4_Copy" Content="{Binding StartTime}" HorizontalAlignment="Left" Margin="494,335,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label x:Name="label5" Content="{Binding ElapsedTime}" HorizontalAlignment="Left" Margin="389,335,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label5_Copy" Content="{Binding ElapsedTime}" HorizontalAlignment="Left" Margin="862,335,0,0" VerticalAlignment="Top"/>
 

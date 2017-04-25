@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StressLoadDemo.Helpers.Configuration
 {
@@ -13,6 +10,7 @@ namespace StressLoadDemo.Helpers.Configuration
         {
             configurations = new Dictionary<string, string>();
         }
+
         public string GetConfigValue(string configName)
         {
             return configurations.First(p => p.Key == configName).Value;
