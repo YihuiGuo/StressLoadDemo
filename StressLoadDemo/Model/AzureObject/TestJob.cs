@@ -8,7 +8,9 @@ namespace StressLoadDemo.Model.AzureObject
     {
         // use the same pool for now
         public const string BatchPoolId = "TestPool";
+
         public IConfigurationProvider ConfigureProvider { get; set; }
+
         // to use as table name/job name in batch service
         public string BatchJobId
         {

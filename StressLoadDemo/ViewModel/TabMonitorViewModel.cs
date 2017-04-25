@@ -2,18 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data.Services.Client;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Azure.Batch;
 using Microsoft.Azure.Batch.Auth;
 using StressLoadDemo.Model.DataProvider;
-using StressLoadDemo.Model.DataProvider.ReceiverTool;
 using Microsoft.Azure.Batch.Common;
 using StressLoadDemo.Model.Utility;
 using GalaSoft.MvvmLight.Command;
@@ -50,6 +46,7 @@ namespace StressLoadDemo.ViewModel
         Stopwatch localwatch;
         string _localRunTime;
         bool _portalBtnEnabled;
+
         public TabMonitorViewModel(IStressDataProvider provider)
         {
             _consumerGroupName = "$Default";
@@ -83,9 +80,12 @@ namespace StressLoadDemo.ViewModel
 
         #region UIBindingProperties
 
-        public RelayCommand ShowAzurePortal => new RelayCommand(() => {
-            System.Diagnostics.Process.Start(_azureAllResourceUrl);
-        });
+        public RelayCommand ShowAzurePortal => 
+            new RelayCommand(() => 
+            {
+                Process.Start(_azureAllResourceUrl);
+            });
+
         public string LocalElapsedTime
         {
             get { return _localRunTime; }
@@ -152,9 +152,9 @@ namespace StressLoadDemo.ViewModel
                 RaisePropertyChanged();
             }
         }
+
         public RelayCommand OpenBrowser { get; set; }
         public RelayCommand Reload { get; set; }
-
 
         public string MessageContent
         {
@@ -357,7 +357,7 @@ namespace StressLoadDemo.ViewModel
         #endregion
         void GoToPortal()
         {
-            System.Diagnostics.Process.Start("http://www.webpage.com");
+            Process.Start("http://www.webpage.com");
         }
 
         void StopCollecting()
@@ -382,8 +382,7 @@ namespace StressLoadDemo.ViewModel
             _deviceNumberBuffer = new List<double>();
             DeviceLines = new ObservableCollection<MyLine>();
             MessageLines = new ObservableCollection<MyLine>();
-            DeviceRealTimeNumber = 0; MessageRealTimeNumber = 0;
-            
+            DeviceRealTimeNumber = 0; MessageRealTimeNumber = 0;           
         }
 
         public void ProcessMonitorConfig(IStressDataProvider provider)
@@ -408,6 +407,7 @@ namespace StressLoadDemo.ViewModel
                 _azureAllResourceUrl = AzureCloudAllResourcesPage;
             }
         }
+
         void ObserveTask(object sender, ElapsedEventArgs e)
         {
             //get task running status
@@ -442,7 +442,6 @@ namespace StressLoadDemo.ViewModel
                 Partitions = partitionIds;
             }
 
-
             //get real time number and calculate the curve
             MessageRealTimeNumber = _hubDataReceiver.totalMessage;
             DeviceRealTimeNumber = _hubDataReceiver.totalDevice;
@@ -465,6 +464,7 @@ namespace StressLoadDemo.ViewModel
                     TestRunTime = "N/A";
                 }
             }
+
             if (!string.IsNullOrEmpty(delaystring))
             {
                 try
@@ -476,10 +476,10 @@ namespace StressLoadDemo.ViewModel
                     DeviceToHubDelay = "N/A";
                 }
             }
+
             MessageContent = _hubDataReceiver.sampleContent;
             Throughput = _hubDataReceiver.throughPut.ToString() + " messages/minute";
             FromDevice = _hubDataReceiver.sampleEventSender;
-
 
             if (TaskTotalCount == TaskCompleteCount && TaskTotalCount != 0)
             {
@@ -494,6 +494,7 @@ namespace StressLoadDemo.ViewModel
                 TransformDataToLines(_deviceNumberBuffer, ref _deviceLineBuffer);
                 TransformDataToLines(_messageNumberBuffer, ref _messageLineBuffer);
             }
+
             else
             {
                 StartTime = _deviceNumberBuffer.Count >( CanvasWidth / 2)? "...":"0";
@@ -512,6 +513,7 @@ namespace StressLoadDemo.ViewModel
                     .ToList()
                     , ref _messageLineBuffer);
             }
+
             var elapsedstring = localwatch.Elapsed.ToString();
             if (!string.IsNullOrEmpty(localwatch.Elapsed.ToString()))
             {
@@ -524,10 +526,9 @@ namespace StressLoadDemo.ViewModel
                     LocalElapsedTime = "N/A";
                 }
             }
+
             DeviceLines = new ObservableCollection<MyLine>(_deviceLineBuffer);
             MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);
-
-
         }
 
         void IsSwitchingEnabled(bool flag)

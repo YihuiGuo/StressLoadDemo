@@ -6,10 +6,10 @@
         S2,
         S3
     }
+
     public struct HubSku
     {
         public HubSize UnitSize;
         public int UnitCount;
-
     }
 }

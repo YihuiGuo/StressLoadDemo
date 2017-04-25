@@ -1,6 +1,5 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
-using StressLoadDemo.Model;
 using StressLoadDemo.Model.DataProvider;
 using StressLoadDemo.Model.Utility;
 
@@ -31,6 +30,7 @@ namespace StressLoadDemo.ViewModel
         int[] tabW = { 830, 950, 950 };
         int[] tabH = { 540, 710, 600 };
         int _mainW, _mainH;
+
         public int SelectedTabIndex
         {
             get { return _selectedTabIndex; }
@@ -55,14 +55,8 @@ namespace StressLoadDemo.ViewModel
                     reqTabVM.SendSpecToTab2.Execute(reqTabVM);
                 }
             }
-            if(newValue==1){
-                //every time user gets into 
-            }
-            //else if (prevVlaue == 2)
-            //{
-
-            //}
         }
+
         public int MainWidth
         {
             get { return _mainW; }

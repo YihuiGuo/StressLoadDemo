@@ -7,6 +7,7 @@
         large,  // 4 core / 7G
         extralarge  // 8 core / 14G
     }
+
     public class VmSku
     {
         public VmSize Size;

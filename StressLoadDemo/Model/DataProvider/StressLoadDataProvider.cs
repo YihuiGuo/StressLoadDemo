@@ -1,18 +1,9 @@
 ﻿using GalaSoft.MvvmLight.Messaging;
-using Microsoft.Azure.Devices;
-using Microsoft.ServiceBus.Messaging;
 using StressLoadDemo.Helpers.Batch;
 using StressLoadDemo.Helpers.Configuration;
 using StressLoadDemo.Model.AzureConstants;
 using StressLoadDemo.Model.AzureObject;
-using StressLoadDemo.Model.DataProvider.ReceiverTool;
-using StressLoadDemo.Model.Utility;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace StressLoadDemo.Model.DataProvider
@@ -34,8 +25,6 @@ namespace StressLoadDemo.Model.DataProvider
         public StressLoadDataProvider()
         {
             //register messenger to know where we are during deployment
-
-
         }
 
 

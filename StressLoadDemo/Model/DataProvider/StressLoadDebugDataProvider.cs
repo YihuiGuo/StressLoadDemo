@@ -27,9 +27,7 @@ namespace StressLoadDemo.Model.DataProvider
             _hubDeviceThread = new Thread(()=> Calculatesin());
             _hubMsgThread = new Thread(()=>Calculateln());
             _hubDeviceThread.Start();
-            _hubMsgThread.Start();
-            
-            
+            _hubMsgThread.Start();         
         }
 
         void Calculatesin()

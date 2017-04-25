@@ -15,21 +15,25 @@ namespace StressLoadDemo.Helpers
         public static HubSku CalculateHubSku(int messagePerMinute)
         {
             HubSku sku = new HubSku();
+
             if (messagePerMinute < IothubS2Speed)
             {
                 sku.UnitSize=HubSize.S1;
                 sku.UnitCount = (int) Math.Ceiling(messagePerMinute/IothubS1Speed);
             }
+
             else if (messagePerMinute < IothubS3Speed)
             {
                 sku.UnitSize = HubSize.S2;
                 sku.UnitCount = (int) Math.Ceiling(messagePerMinute/IothubS2Speed);
             }
+
             else
             {
                 sku.UnitSize=HubSize.S3;
                 sku.UnitCount= (int)Math.Ceiling(messagePerMinute / IothubS3Speed);
             }
+
             return sku;
         }
 

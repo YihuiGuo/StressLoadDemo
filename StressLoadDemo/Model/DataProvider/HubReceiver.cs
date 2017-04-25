@@ -3,12 +3,9 @@ using Microsoft.Azure.Devices;
 using Microsoft.ServiceBus.Messaging;
 using StressLoadDemo.Model.DataProvider.ReceiverTool;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace StressLoadDemo.Model.DataProvider
 {
@@ -30,23 +27,24 @@ namespace StressLoadDemo.Model.DataProvider
         public bool pause;
         Stopwatch stopwatch;
         static EventHubClient _eventHubClient;
+
         public HubReceiver(IStressDataProvider provider)
         {
-            try { 
-            var builder = IotHubConnectionStringBuilder.Create(provider.HubOwnerConectionString);
-            configSettings = new Settings();
-            configSettings.ConnectionString = $"Endpoint={provider.EventHubEndpoint};SharedAccessKeyName={builder.SharedAccessKeyName};SharedAccessKey={builder.SharedAccessKey}";
-            configSettings.Path = builder.HostName.Split('.').First();
-            configSettings.PartitionId = "0";
-            configSettings.GroupName = "$Default";
-            configSettings.StartingDateTimeUtc = DateTime.UtcNow - TimeSpan.FromMinutes(2);
-            pause = false;
-            workThread = new Thread(() => FetchHubData());
-            workThread.Start();
+            try
+            {
+                var builder = IotHubConnectionStringBuilder.Create(provider.HubOwnerConectionString);
+                configSettings = new Settings();
+                configSettings.ConnectionString = $"Endpoint={provider.EventHubEndpoint};SharedAccessKeyName={builder.SharedAccessKeyName};SharedAccessKey={builder.SharedAccessKey}";
+                configSettings.Path = builder.HostName.Split('.').First();
+                configSettings.PartitionId = "0";
+                configSettings.GroupName = "$Default";
+                configSettings.StartingDateTimeUtc = DateTime.UtcNow - TimeSpan.FromMinutes(2);
+                pause = false;
+                workThread = new Thread(() => FetchHubData());
+                workThread.Start();
             }
             catch
             {
-
             }
         }
 

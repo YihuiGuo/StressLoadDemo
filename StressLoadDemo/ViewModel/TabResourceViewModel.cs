@@ -339,8 +339,8 @@ namespace StressLoadDemo.ViewModel
                     break;
             }
             var CurrentPhaseStatus = status.Status;
-
         }
+
         void MoveOnToMonitor()
         {
             var mainvm = new ViewModelLocator().Main;
@@ -351,6 +351,7 @@ namespace StressLoadDemo.ViewModel
         {
             return false;
         }
+
         void ProcessRunConfigValue(IStressDataProvider provider)
         {
             provider.BatchKey = _batchAccountKey;
@@ -359,7 +360,6 @@ namespace StressLoadDemo.ViewModel
             provider.BatchUrl = _batchServiceUrl;
             provider.StorageAccountConectionString = _storageAccountConnectionString;
             provider.Run();
-
         }
 
         public void AppendBatchJobId(string batchJobId)
@@ -374,9 +374,7 @@ namespace StressLoadDemo.ViewModel
                 string.IsNullOrEmpty(_batchAccountKey) ||
                 string.IsNullOrEmpty(_batchServiceUrl) ||
                 string.IsNullOrEmpty(_storageAccountConnectionString) ||
-                _dataProvider.MessagePerMinute == 0
-                )
-                )
+                _dataProvider.MessagePerMinute == 0))
             {
                 CanStartTest = true;
             }

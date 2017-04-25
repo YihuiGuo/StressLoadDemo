@@ -2,7 +2,6 @@
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using StressLoadDemo.Helpers;
-using StressLoadDemo.Model;
 using StressLoadDemo.Model.AzureConstants;
 using StressLoadDemo.Model.DataProvider;
 using StressLoadDemo.Model.Utility;
@@ -15,8 +14,6 @@ namespace StressLoadDemo.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    
-    
     public class TabRequirementViewModel : ViewModelBase
     {
         private int _totalDevice;
@@ -28,13 +25,13 @@ namespace StressLoadDemo.ViewModel
         private VmSku _vmInfo;
         private bool _buttonEnabled;
         private IStressDataProvider _dataProvider;
+
         /// <summary>
         /// Initializes a new instance of the TabDashboardViewModel class.
         /// </summary>
         public TabRequirementViewModel(IStressDataProvider provider,MainViewModel mainVm)
         {
-            _dataProvider = provider;
-           
+            _dataProvider = provider;        
             _iothubrecommendation = "";
             _vmRecommendation= "";
             _buttonEnabled = false;
@@ -49,6 +46,7 @@ namespace StressLoadDemo.ViewModel
         {
             System.Diagnostics.Process.Start("https://www.azure.cn/pricing/details/iot-hub/");
         });
+
         public RelayCommand SendSpecToTab2 => new RelayCommand(
             () =>
             {
@@ -68,6 +66,7 @@ namespace StressLoadDemo.ViewModel
             },
             () => ButtonEnabled
             );
+
         public bool ButtonEnabled
         {
             get { return _buttonEnabled; }
@@ -77,6 +76,7 @@ namespace StressLoadDemo.ViewModel
                 RaisePropertyChanged();
             }
         }
+
         public string TotalDevice
         {
             get {return _totalDevice.ToString();}
@@ -95,6 +95,7 @@ namespace StressLoadDemo.ViewModel
                 TryActivateButton();
             }
         }
+
         public string MessagePerMinPerDevice
         {
             get { return _messagePerMinutePerDevice.ToString(); }
@@ -109,6 +110,7 @@ namespace StressLoadDemo.ViewModel
                 RaisePropertyChanged();
             }
         }
+
         public string MessagePerMin
         {
             get { return _totalMessagePerMinute.ToString(); }
@@ -120,6 +122,7 @@ namespace StressLoadDemo.ViewModel
                 RecommendHub(_totalMessagePerMinute);
             }
         }
+
         public string TestDuration
         {
             get
@@ -140,6 +143,7 @@ namespace StressLoadDemo.ViewModel
                 RaisePropertyChanged();
             }
         }
+
         public string VmSkuRecommendation
         {
             get { return _vmRecommendation; }
@@ -161,6 +165,7 @@ namespace StressLoadDemo.ViewModel
             _vmInfo = SkuCalculator.CalculateVmSku(totalDevice);
             VmSkuRecommendation = _vmInfo.Size.ToString() + " x " + _vmInfo.VmCount;
         }
+
         public void TryActivateButton()
         {
             if (_testDuration != 0
