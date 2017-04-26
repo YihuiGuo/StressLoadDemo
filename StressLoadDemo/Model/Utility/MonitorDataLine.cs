@@ -1,6 +1,6 @@
 ﻿namespace StressLoadDemo.Model.Utility
 {
-    public class MyLine
+    public class MonitorDataLine
     {
         public double X1 { get; set; }
         public double Y1 { get; set; }

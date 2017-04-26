@@ -42,9 +42,14 @@ namespace StressLoadDemo.ViewModel
             System.Diagnostics.Process.Start("https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-quotas-throttling");
         });
 
-        public RelayCommand OpenPriceLink => new RelayCommand(()=> 
+        public RelayCommand OpenPriceLinkChina => new RelayCommand(()=> 
         {
             System.Diagnostics.Process.Start("https://www.azure.cn/pricing/details/iot-hub/");
+        });
+        
+        public RelayCommand OpenPriceLinkGlobal => new RelayCommand(() =>
+        {
+            System.Diagnostics.Process.Start("https://azure.microsoft.com/zh-cn/pricing/details/iot-hub/");
         });
 
         public RelayCommand SendSpecToTab2 => new RelayCommand(

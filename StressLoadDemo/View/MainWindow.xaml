@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:view="clr-namespace:StressLoadDemo.View"
         mc:Ignorable="d"
-         Title="MainWindow" Height="{Binding MainHeight}" Width="{Binding MainWidth}"
+         Title="IoT Hub Stress Tool" Height="{Binding MainHeight}" Width="{Binding MainWidth}"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}" SizeToContent="WidthAndHeight" FontSize="14" ResizeMode="NoResize"
         >
     <Grid Height="Auto">

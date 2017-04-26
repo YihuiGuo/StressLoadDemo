@@ -22,10 +22,11 @@ namespace StressLoadDemo.ViewModel
         const string AzureChinaCloudAllResourcesPage ="https://portal.azure.cn/#blade/HubsExtension/Resources/resourceType/Microsoft.Resources%2Fresources";
         private const double CanvasWidth = 415;
         private const double CanvasHeight = 216;
+        private string _batchJobId;
         private readonly Timer _refreshDataTimer, _refreshTaskTimer;
         private double _deviceRealTimeNumber, _messageRealTimeNumber;
-        private ObservableCollection<MyLine> _deviceLines, _messageLines;
-        private List<MyLine> _deviceLineBuffer, _messageLineBuffer;
+        private ObservableCollection<MonitorDataLine> _deviceLines, _messageLines;
+        private List<MonitorDataLine> _deviceLineBuffer, _messageLineBuffer;
         private List<double> _deviceNumberBuffer, _messageNumberBuffer;
         private IStressDataProvider _dataProvider;
         private string _selectedPartition;
@@ -42,11 +43,20 @@ namespace StressLoadDemo.ViewModel
         string _elapasedTime;
         string _startTime;
         private ObservableCollection<string> _partitions { get; set; }
-        string _testRunTime, _throughput, _d2hDelay, _e2eDelay;
+        string _testRunTime, _throughput, _d2hAvg, _d2h1Min,_e2eDelay;
         Stopwatch localwatch;
-        string _localRunTime;
+        string _localRunTime, _timestamp;
         bool _portalBtnEnabled;
 
+        public string TimeStamp
+        {
+            get{ return _timestamp; }
+            set
+            {
+                _timestamp = value;
+                RaisePropertyChanged();
+            }
+        }
         public TabMonitorViewModel(IStressDataProvider provider)
         {
             _consumerGroupName = "$Default";
@@ -57,7 +67,7 @@ namespace StressLoadDemo.ViewModel
             _partitions = new ObservableCollection<string>();
             _messageContent = "N/A";_fromDevice = "N/A";
             TestRunTime = "N/A"; Throughput = "N/A";
-            DeviceToHubDelay = "N/A";
+            DeviceToHubDelayAvg = "N/A";DeviceToHubDelay1Min = "N/A";
             _taskStatus = "N/A"; _localRunTime= "N/A";
             Messenger.Default.Register<IStressDataProvider>(
                this,
@@ -96,6 +106,15 @@ namespace StressLoadDemo.ViewModel
             }
         }
 
+        public string BatchJobId
+        {
+            get { return _batchJobId; }
+            set
+            {
+                _batchJobId = value;
+                RaisePropertyChanged();
+            }
+        } 
         public bool PortalBtnEnabled
         {
             get { return _portalBtnEnabled; }
@@ -196,17 +215,27 @@ namespace StressLoadDemo.ViewModel
             }
         }
 
-        public string DeviceToHubDelay
+        public string DeviceToHubDelay1Min
         {
-            get { return _d2hDelay; }
+            get { return _d2h1Min; }
             set
             {
-                _d2hDelay = value;
+                _d2h1Min = value;
                 RaisePropertyChanged();
             }
         }
 
-        public ObservableCollection<MyLine> MessageLines
+        public string DeviceToHubDelayAvg
+        {
+            get { return _d2hAvg; }
+            set
+            {
+                _d2hAvg = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        public ObservableCollection<MonitorDataLine> MessageLines
         {
             get { return _messageLines; }
             set
@@ -216,7 +245,7 @@ namespace StressLoadDemo.ViewModel
             }
         }
 
-        public ObservableCollection<MyLine> DeviceLines
+        public ObservableCollection<MonitorDataLine> DeviceLines
         {
             get
             {
@@ -376,18 +405,19 @@ namespace StressLoadDemo.ViewModel
             _refreshTaskTimer.Enabled = true;
             _refreshDataTimer.Enabled = true;
             _firstDataArriveTime = DateTime.Now;
-            _messageLineBuffer = new List<MyLine>();
-            _deviceLineBuffer = new List<MyLine>();
+            _messageLineBuffer = new List<MonitorDataLine>();
+            _deviceLineBuffer = new List<MonitorDataLine>();
             _messageNumberBuffer = new List<double>();
             _deviceNumberBuffer = new List<double>();
-            DeviceLines = new ObservableCollection<MyLine>();
-            MessageLines = new ObservableCollection<MyLine>();
+            DeviceLines = new ObservableCollection<MonitorDataLine>();
+            MessageLines = new ObservableCollection<MonitorDataLine>();
             DeviceRealTimeNumber = 0; MessageRealTimeNumber = 0;           
         }
 
         public void ProcessMonitorConfig(IStressDataProvider provider)
         {
             _hubDataReceiver = new HubReceiver(provider);
+            BatchJobId = provider.BatchJobId;
             _hubDataReceiver.StartReceive();
             localwatch = Stopwatch.StartNew();
             StartCollecting();
@@ -418,6 +448,18 @@ namespace StressLoadDemo.ViewModel
             {
                 var job = batchClient.JobOperations.GetJob(_dataProvider.BatchJobId);
                 var list = job.ListTasks();
+                var runningtime = (DateTime.UtcNow - job.CreationTime).ToString();
+                if (!string.IsNullOrEmpty(runningtime))
+                {
+                    try
+                    {
+                        TestRunTime = runningtime.Substring(0, 11);
+                    }
+                    catch
+                    {
+                        TestRunTime = "N/A";
+                    }
+                }
                 var totalCount = list.Count();
                 var activeCount = list.Count(m => m.State == TaskState.Active || m.State == TaskState.Preparing);
                 var runningCount = list.Count(m => m.State == TaskState.Running);
@@ -451,29 +493,30 @@ namespace StressLoadDemo.ViewModel
             _deviceNumberBuffer.Add(_deviceRealTimeNumber);
 
             var runtimestring = _hubDataReceiver.runningTime.ToString();
-           
-            var delaystring = _hubDataReceiver.deviceToHubDelay;
-            if (!string.IsNullOrEmpty(runtimestring))
+
+            var delaystringavg = _hubDataReceiver.deviceToHubDelayAvg;
+            if (!string.IsNullOrEmpty(delaystringavg))
             {
                 try
                 {
-                    TestRunTime = runtimestring.Substring(0, 11);
+                    DeviceToHubDelayAvg = runtimestring.Substring(0, 11);
                 }
                 catch
                 {
-                    TestRunTime = "N/A";
+                    DeviceToHubDelayAvg = "N/A";
                 }
             }
 
-            if (!string.IsNullOrEmpty(delaystring))
+            var delaystring1min = _hubDataReceiver.deviceToHubDelayOneMin;
+            if (!string.IsNullOrEmpty(delaystring1min))
             {
                 try
                 {
-                    DeviceToHubDelay = delaystring.Substring(0, 11);
+                    DeviceToHubDelay1Min = delaystring1min.Substring(0, 11);
                 }
                 catch
                 {
-                    DeviceToHubDelay = "N/A";
+                    DeviceToHubDelay1Min = "N/A";
                 }
             }
 
@@ -514,6 +557,8 @@ namespace StressLoadDemo.ViewModel
                     , ref _messageLineBuffer);
             }
 
+            var datetimestring = DateTime.Now.ToString("HH:mm:ss");
+            TimeStamp = $"Details(updated at {datetimestring})";
             var elapsedstring = localwatch.Elapsed.ToString();
             if (!string.IsNullOrEmpty(localwatch.Elapsed.ToString()))
             {
@@ -527,8 +572,8 @@ namespace StressLoadDemo.ViewModel
                 }
             }
 
-            DeviceLines = new ObservableCollection<MyLine>(_deviceLineBuffer);
-            MessageLines = new ObservableCollection<MyLine>(_messageLineBuffer);
+            DeviceLines = new ObservableCollection<MonitorDataLine>(_deviceLineBuffer);
+            MessageLines = new ObservableCollection<MonitorDataLine>(_messageLineBuffer);
         }
 
         void IsSwitchingEnabled(bool flag)
@@ -537,9 +582,9 @@ namespace StressLoadDemo.ViewModel
             ComboEnabled = flag;
         }
 
-        void TransformDataToLines(List<double> data, ref List<MyLine> targetLines)
+        void TransformDataToLines(List<double> data, ref List<MonitorDataLine> targetLines)
         {
-            targetLines = new List<MyLine>();
+            targetLines = new List<MonitorDataLine>();
             if (data.Count > 1)
             {
                 var maxY = data.Max();
@@ -550,12 +595,12 @@ namespace StressLoadDemo.ViewModel
                 var verticalShift = maxY > 0 ? scaleY * maxY : -scaleY * maxY;
                 var xUnit = CanvasWidth / (data.Count - 1);
                 double prevX = 0, prevY = verticalShift - scaleY * data[0];
-                var temp = new List<MyLine>();
+                var temp = new List<MonitorDataLine>();
                 data.Take(data.Count - 1).ToList().ForEach(p =>
                 {
                     p = verticalShift - p * scaleY;
 
-                    temp.Add(new MyLine() { X1 = prevX, Y1 = prevY, X2 = prevX + xUnit, Y2 = p });
+                    temp.Add(new MonitorDataLine() { X1 = prevX, Y1 = prevY, X2 = prevX + xUnit, Y2 = p });
 
                     prevX += xUnit;
                     prevY = p;

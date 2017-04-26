@@ -20,7 +20,7 @@ namespace StressLoadDemo.Model.DataProvider
         public DateTime currentDate;
         public TimeSpan runningTime;
         public int throughPut;
-        public string  deviceToHubDelay;
+        public string  deviceToHubDelayAvg, deviceToHubDelayOneMin;
         public string e2EDelay;
         public string sampleContent;
         public string sampleEventSender;
@@ -59,7 +59,7 @@ namespace StressLoadDemo.Model.DataProvider
         {
             pause = true;
             totalDevice = 0;totalMessage = 0;
-            deviceToHubDelay = "N/A"; e2EDelay = "N/A";
+            deviceToHubDelayAvg = "N/A"; e2EDelay = "N/A";
             sampleContent = "N/A";sampleEventSender = "N/A";
             throughPut = 0;
 
@@ -105,7 +105,8 @@ namespace StressLoadDemo.Model.DataProvider
                         currentDate = DateTime.Now;
                         runningTime = stopwatch.Elapsed;
                         throughPut = (int)(indicators.TotalMessages / stopwatch.Elapsed.TotalMinutes);
-                        deviceToHubDelay = FormatDelay(indicators.DeviceToIoTHubDelay.StreamAvg);
+                        deviceToHubDelayAvg = FormatDelay(indicators.DeviceToIoTHubDelay.StreamAvg);
+                        deviceToHubDelayOneMin = FormatDelay(indicators.DeviceToIoTHubDelay.WindowAvg);
                         e2EDelay = FormatDelay(indicators.E2EDelay.StreamAvg);
                         sampleContent = indicators.SampleEvent;
                         sampleEventSender = indicators.SampleEventSender;

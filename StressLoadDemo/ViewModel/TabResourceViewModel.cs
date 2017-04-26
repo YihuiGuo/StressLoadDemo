@@ -42,7 +42,7 @@ namespace StressLoadDemo.ViewModel
         public PhaseStatus _currentPhaseStatus;
 
         private int _progressBarValue;
-        private Brush[] _lableBgColors;
+        private Visibility[] _lableVisibilities;
         /// <summary>
         /// Initializes a new instance of the TabDashboardViewModel class.
         /// </summary>
@@ -74,12 +74,8 @@ namespace StressLoadDemo.ViewModel
                "BatchJobId",
                AppendBatchJobId
                );
-            _lableBgColors = new Brush[5] {
-                Brushes.White,
-                Brushes.White ,
-                Brushes.White ,
-                Brushes.White ,
-                Brushes.White };
+            _lableVisibilities = new Visibility[5] {Visibility.Hidden,Visibility.Hidden,Visibility.Hidden,Visibility.Hidden,Visibility.Hidden };
+               
             _specDeviceCount = _specDuration = _specMsgFreq = "Not Specified";
             _currentDeployPhase = DeployPhase.DeployStarted;
             _currentPhaseStatus = PhaseStatus.Succeeded;
@@ -204,64 +200,64 @@ namespace StressLoadDemo.ViewModel
                 RaisePropertyChanged();
             }
         }
-        public Brush StartLableBgColor
+        public Visibility StartLableVisibility
         {
             get
             {
-                return _lableBgColors[0];
+                return _lableVisibilities[0];
             }
             set
             {
-                _lableBgColors[0] = value;
+                _lableVisibilities[0] = value;
                 RaisePropertyChanged();
             }
         }
-        public Brush PoolLableBgColor
+        public Visibility PoolLableVisibility
         {
             get
             {
-                return _lableBgColors[1];
+                return _lableVisibilities[1];
             }
             set
             {
-                _lableBgColors[1] = value;
+                _lableVisibilities[1] = value;
                 RaisePropertyChanged();
             }
         }
-        public Brush AssemblyLableBgColor
+        public Visibility AssemblyLableVisibility
         {
             get
             {
-                return _lableBgColors[2];
+                return _lableVisibilities[2];
             }
             set
             {
-                _lableBgColors[2] = value;
+                _lableVisibilities[2] = value;
                 RaisePropertyChanged();
             }
         }
 
-        public Brush JobLableBgColor
+        public Visibility JobLableVisibility
         {
             get
             {
-                return _lableBgColors[3];
+                return _lableVisibilities[3];
             }
             set
             {
-                _lableBgColors[3] = value;
+                _lableVisibilities[3] = value;
                 RaisePropertyChanged();
             }
         }
-        public Brush FinishLableBgColor
+        public Visibility FinishLableVisibility
         {
             get
             {
-                return _lableBgColors[4];
+                return _lableVisibilities[4];
             }
             set
             {
-                _lableBgColors[4] = value;
+                _lableVisibilities[4] = value;
                 RaisePropertyChanged();
             }
         }
@@ -281,7 +277,7 @@ namespace StressLoadDemo.ViewModel
         void RunTest()
         {
             new ViewModelLocator().Main.TestStart = true;
-            StartLableBgColor = Brushes.DarkGray;
+            StartLableVisibility = Visibility.Visible;
         }
         public bool IsLogsChangedPropertyInViewModel
         {
@@ -311,7 +307,7 @@ namespace StressLoadDemo.ViewModel
             var devicecountint = int.Parse(_dataProvider.DevicePerVm) * int.Parse(_dataProvider.NumOfVm);
             var messagefreqint = _dataProvider.MessagePerMinute;
             SpecDeviceCount = $"Device Number : {devicecountint}";
-            SpecMsgFreq = $"Message Speed: {messagefreqint} messages/minute/device";
+            SpecMsgFreq = $"Message Rate: {messagefreqint} messages/minute/device";
             SpecDuration = $"Duration: {_dataProvider.ExpectTestDuration} minutes";
         }
 
@@ -321,19 +317,19 @@ namespace StressLoadDemo.ViewModel
             switch (deployPhase)
             {
                 case 1:
-                    PoolLableBgColor = Brushes.DarkGray;
+                    PoolLableVisibility = Visibility.Visible;
                     ProgressValue = 1;
                     break;
                 case 2:
-                    AssemblyLableBgColor = Brushes.DarkGray;
+                    AssemblyLableVisibility = Visibility.Visible;
                     ProgressValue = 2;
                     break;
                 case 3:
-                    JobLableBgColor = Brushes.DarkGray;
+                    JobLableVisibility = Visibility.Visible;
                     ProgressValue = 3;
                     break;
                 case 4:
-                    FinishLableBgColor = Brushes.DarkGray;
+                    FinishLableVisibility = Visibility.Visible;
                     ProgressValue = 4;
                     MoveOnToMonitor();
                     break;
